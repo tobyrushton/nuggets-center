@@ -1,7 +1,7 @@
 namespace team {
     interface ITeam {
         id : number
-        name: number
+        name: string
         logo_url: string
     }
 
