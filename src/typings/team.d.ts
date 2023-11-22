@@ -1,6 +1,9 @@
+/* eslint @typescript-eslint/no-unused-vars: 0 */
+// disabled rule due to it producing error
+
 namespace team {
     interface ITeam {
-        id : number
+        id: number
         name: string
         logo_url: string
     }

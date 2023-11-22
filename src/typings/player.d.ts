@@ -1,3 +1,6 @@
+/* eslint @typescript-eslint/no-unused-vars: 0 */
+// disabled rule due to it producing error
+
 namespace player {
     interface IPlayer {
         id: string
