@@ -1,0 +1,88 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Player {
+  id              String          @id @default(uuid())
+  first_name      String
+  last_name       String
+  weight          Int
+  height_feet     Int
+  height_inches   Int
+  season_averages SeasonAverages?
+  profile_url     String
+  games           PlayerGame[]
+}
+
+model SeasonAverages {
+  id           String @id @default(uuid())
+  games_played Int
+  player       Player @relation(fields: [player_id], references: [id])
+  player_id    String @unique
+  season       String
+  min          String
+  fgm          Float
+  fga          Float
+  fg3m         Float
+  fg3a         Float
+  ftm          Float
+  fta          Float
+  oreb         Float
+  dreb         Float
+  reb          Float
+  ast          Float
+  stl          Float
+  blk          Float
+  turnover     Float
+  pf           Float
+  pts          Float
+  fg_pct       Float
+  fg3_pct      Float
+  ft_pct       Float
+}
+
+model PlayerGame {
+  id        String @id @default(uuid())
+  player    Player @relation(fields: [player_id], references: [id])
+  player_id String
+  game      Game   @relation(fields: [game_id], references: [id])
+  game_id   String
+  pts       Int
+  ast       Int
+  reb       Int
+  min       String
+  fgm       Int
+  fga       Int
+  fg3m      Int
+  fg3a      Int
+  ftm       Int
+  fta       Int
+  oreb      Int
+  dreb      Int
+  stl       Int
+  blk       Int
+  turnover  Int
+  pf        Int
+  fg_pct    Float
+  fg3_pct   Float
+  ft_pct    Float
+}
+
+model Team {
+  id       String @id @default(uuid())
+  name     String
+  logo_url String
+  games    Game[]
+}
+
+model Game {
+  id             String       @id @default(uuid())
+  date           String // stored as ISO string
+  home           Boolean
+  opponent       Team         @relation(fields: [opponent_id], references: [id])
+  opponent_id    String
+  opponent_score Int
+  home_score     Int
+  PlayerGame     PlayerGame[]
+}
