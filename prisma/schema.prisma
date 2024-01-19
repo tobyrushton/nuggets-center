@@ -62,8 +62,6 @@ model PlayerGame {
   fg3a      Int
   ftm       Int
   fta       Int
-  oreb      Int
-  dreb      Int
   stl       Int
   blk       Int
   turnover  Int
