@@ -1,4 +1,5 @@
 import jsdom from 'jsdom'
+import { getDateOfGame } from '@/lib/getDateOfGame'
 
 const { JSDOM } = jsdom
 
@@ -12,26 +13,6 @@ interface IScheduleScrape {
 }
 
 /**
- * @param {NodeListOf<Element>} rows - the rows of the schedule table
- * @returns {Number} index of the date of the last game of the calendar year
- */
-const findIndexOfLastGameOfTheCalendarYear = (
-    // eslint-disable-next-line no-undef
-    rows: NodeListOf<Element>
-): number => {
-    const decemberGamesIndex: number[] = []
-
-    rows.forEach((row, index) => {
-        const date = row.querySelectorAll('td')[0].textContent as string
-        // dont check the header row
-        if (date === 'DATE') return
-        if (new Date(date).getMonth() === 11) decemberGamesIndex.push(index)
-    })
-
-    return decemberGamesIndex[decemberGamesIndex.length - 1]
-}
-
-/**
  * @description scrapes the schedule from espn.co.uk
  * @returns {Promise<IScheduleScrape[]>} scraped schedule
  */
@@ -41,8 +22,6 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
     )
     const dom = new JSDOM(await res.text())
     const rows = dom.window.document.querySelectorAll('.Table__TR')
-
-    const lastGame = findIndexOfLastGameOfTheCalendarYear(rows)
 
     const schedule: IScheduleScrape[] = []
 
@@ -58,11 +37,6 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
         const [homeIndicator, opponentName] = opponent.split(' ')
         const home = homeIndicator === 'vs.'
 
-        const year =
-            index > lastGame
-                ? new Date().getFullYear() + 1
-                : new Date().getFullYear()
-
         // if game completed -> in the past
         if (content.length === 7) {
             const score = content[2].textContent as string
@@ -70,7 +44,7 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
                 .slice(1, score.length - 1)
                 .split('-')
             schedule.push({
-                date: new Date(`${date} ${year}`).toISOString(),
+                date: getDateOfGame(date).toISOString(),
                 home,
                 opponent_name: opponentName,
                 opponent_score: parseInt(opponentScore, 10),
@@ -80,7 +54,7 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
         else if (content.length === 5) {
             const time = content[2].textContent as string
             schedule.push({
-                date: new Date(`${date} ${time} ${year}`).toISOString(),
+                date: getDateOfGame('date').toISOString(),
                 home,
                 opponent_name: opponentName,
             })
