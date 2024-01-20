@@ -14,24 +14,21 @@ export const updateSchedule = async (): Promise<void> => {
     // then we need to add the new schedule
     if (scheduleInDb.length < schedule.length) {
         const newSchedule = schedule.filter(
-            schedule =>
-                !scheduleInDb.some(
-                    scheduleInDb => scheduleInDb.date === schedule.date
-                )
+            game => !scheduleInDb.some(gameInDb => gameInDb.date === game.date)
         )
 
-        const newScheduleWithTeamIds = newSchedule.map(schedule => {
+        const newScheduleWithTeamIds = newSchedule.map(game => {
             const opponent_id = teamsInDb.find(
-                team => team.name === schedule.opponent_name
+                team => team.name === game.opponent_name
             )?.id as string
 
-            // scores are undefined if the game is in the future so score is set to -1 (impossible score)
+            // scores are undefined if the game is in the future so score is set to -1
             return {
                 opponent_id,
-                date: schedule.date,
-                home: schedule.home,
-                opponent_score: schedule.opponent_score ?? -1,
-                home_score: schedule.home_score ?? -1,
+                date: game.date,
+                home: game.home,
+                opponent_score: game.opponent_score ?? -1,
+                home_score: game.home_score ?? -1,
             }
         })
         await prisma.game.createMany({ data: newScheduleWithTeamIds })

@@ -33,12 +33,12 @@ export const updateSeasonAverages = async (): Promise<void> => {
                             seasonAverage.player_name.split(' ')[1]
                 )
 
-                const { player_name, min, ...rest } = seasonAverage
+                const { player_name: _, min, ...rest } = seasonAverage
                 return {
                     ...rest,
                     player_id: player?.player_id as string,
                     season: '2023-24',
-                    min: min.toString()
+                    min: min.toString(),
                 }
             }
         )
