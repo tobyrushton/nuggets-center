@@ -25,7 +25,7 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
 
     const schedule: IScheduleScrape[] = []
 
-    rows.forEach((row, index) => {
+    rows.forEach(row => {
         const content = row.querySelectorAll('td')
 
         // dont want to scrape the header rows
@@ -52,7 +52,7 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
             })
         } // if game not completed -> in the future
         else if (content.length === 5) {
-            const time = content[2].textContent as string
+            // const time = content[2].textContent as string
             schedule.push({
                 date: getDateOfGame('date').toISOString(),
                 home,

@@ -105,7 +105,7 @@ export const scrapeGameStats = async (
                 fg_pct: parseFloat(fg_pct),
                 fg3_pct: parseFloat(fg3_pct),
                 ft_pct: parseFloat(ft_pct),
-                date: date
+                date,
             })
         }
     })
