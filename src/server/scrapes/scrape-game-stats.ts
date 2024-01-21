@@ -20,6 +20,7 @@ interface IScrapeGameStats {
     fg_pct: number
     fg3_pct: number
     ft_pct: number
+    date: string // used for matching
 }
 
 export interface IGameStats extends IScrapeGameStats {
@@ -70,6 +71,7 @@ export const scrapeGameStats = async (
         const cells = row.querySelectorAll('.Table__TD')
         const regex = /[A-Za-z]+ [0-9]+\/[0-9]+/i
         if (cells[0] && regex.test(cells[0].textContent as string)) {
+            const date = cells[0].textContent?.split(' ')[1] as string
             const pts = cells[16].textContent as string
             const reb = cells[10].textContent as string
             const ast = cells[11].textContent as string
@@ -103,6 +105,7 @@ export const scrapeGameStats = async (
                 fg_pct: parseFloat(fg_pct),
                 fg3_pct: parseFloat(fg3_pct),
                 ft_pct: parseFloat(ft_pct),
+                date: date
             })
         }
     })
