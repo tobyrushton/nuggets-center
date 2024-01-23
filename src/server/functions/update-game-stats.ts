@@ -46,12 +46,13 @@ export const updateGameStats = async (): Promise<void> => {
                 }
             })
 
-            const filteredGameStats = gamesWithIds.filter(gameStat =>
-                !gameStatsInDb.find(
-                    gmeStatInDb => gmeStatInDb.game_id === gameStat.game_id
-                )
+            const filteredGameStats = gamesWithIds.filter(
+                gameStat =>
+                    !gameStatsInDb.find(
+                        gmeStatInDb => gmeStatInDb.game_id === gameStat.game_id
+                    )
             )
-            
+
             if (filteredGameStats.length > 0)
                 await prisma.playerGame.createMany({
                     data: filteredGameStats,

@@ -7,10 +7,12 @@ import { scrapeSeasonAverages } from '../scrapes/scrape-season-averages'
  * @returns {Promise<void>}
  */
 export const updateSeasonAverages = async (): Promise<void> => {
-    const seasonAverages = await scrapeSeasonAverages()
-    const seasonAveragesInDb = await prisma.seasonAverages.findMany({
-        include: { player: true },
-    })
+    const [seasonAverages, seasonAveragesInDb] = await Promise.all([
+        scrapeSeasonAverages(),
+        prisma.seasonAverages.findMany({
+            include: { player: true },
+        }),
+    ])
 
     const newSeasonAverages = seasonAverages.filter(
         seasonAverage =>

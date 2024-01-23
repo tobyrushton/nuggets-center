@@ -6,8 +6,10 @@ import { scrapeTeams } from '../scrapes/scrape-teams'
  * @returns {Promise<void>}
  */
 export const updateTeams = async (): Promise<void> => {
-    const teams = await scrapeTeams()
-    const teamsInDb = await prisma.team.findMany()
+    const [teams, teamsInDb] = await Promise.all([
+        scrapeTeams(),
+        prisma.team.findMany(),
+    ])
 
     const teamsNotInDb = teams.filter(
         team => !teamsInDb.some(teamInDb => teamInDb.name === team.name)

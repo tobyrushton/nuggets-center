@@ -6,9 +6,11 @@ import { scrapeSchedule } from '../scrapes/scrape-schedule'
  * @returns {Promise<void>}
  */
 export const updateSchedule = async (): Promise<void> => {
-    const schedule = await scrapeSchedule()
-    const scheduleInDb = await prisma.game.findMany()
-    const teamsInDb = await prisma.team.findMany()
+    const [schedule, scheduleInDb, teamsInDb] = await Promise.all([
+        scrapeSchedule(),
+        prisma.game.findMany(),
+        prisma.team.findMany(),
+    ])
 
     // if the schedule in the db is less than the schedule scraped
     // then we need to add the new schedule
