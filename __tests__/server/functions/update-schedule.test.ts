@@ -1,11 +1,12 @@
+import { describe, it, expect, vi, Mock, beforeEach } from 'vitest'
 import { updateSchedule } from '../../../src/server/functions/update-schedule'
 import { prismaMock } from '../../singleton'
 import { scrapeSchedule } from '../../../src/server/scrapes/scrape-schedule'
-import { getDateOfGame } from '@/lib/getDateOfGame'
+import { getDateOfGame } from '../../../src/lib/getDateOfGame'
 
-jest.mock('../../../src/server/scrapes/scrape-schedule', () => ({
+vi.mock('../../../src/server/scrapes/scrape-schedule', () => ({
     __esModule: true,
-    scrapeSchedule: jest.fn(),
+    scrapeSchedule: vi.fn(),
 }))
 
 const mockTeamsInDb = [
@@ -15,8 +16,8 @@ const mockTeamsInDb = [
 
 describe('updateSchedule', () => {
     beforeEach(() => {
-        jest.clearAllMocks()
-        jest.useFakeTimers().setSystemTime(new Date('2024-01-01'))
+        vi.clearAllMocks()
+        vi.useFakeTimers().setSystemTime(new Date('2024-01-01'))
     })
 
     it('should update the schedule in the database if there are new games', async () => {
@@ -37,7 +38,7 @@ describe('updateSchedule', () => {
         ]
 
         // Mock the return values of the mocked functions
-        ;(scrapeSchedule as jest.Mock).mockResolvedValue(mockSchedule)
+        ;(scrapeSchedule as Mock).mockResolvedValue(mockSchedule)
         prismaMock.game.findMany.mockResolvedValue(mockScheduleInDb)
         prismaMock.team.findMany.mockResolvedValue(mockTeamsInDb)
         prismaMock.game.createMany.mockResolvedValue({
@@ -103,7 +104,7 @@ describe('updateSchedule', () => {
         ]
 
         // Mock the return values of the mocked functions
-        ;(scrapeSchedule as jest.Mock).mockResolvedValue(mockSchedule)
+        ;(scrapeSchedule as Mock).mockResolvedValue(mockSchedule)
         prismaMock.game.findMany.mockResolvedValue(mockScheduleInDb)
         prismaMock.team.findMany.mockResolvedValue(mockTeamsInDb)
 
@@ -149,7 +150,7 @@ describe('updateSchedule', () => {
         ]
 
         // Mock the return values of the mocked functions
-        ;(scrapeSchedule as jest.Mock).mockResolvedValue(mockSchedule)
+        ;(scrapeSchedule as Mock).mockResolvedValue(mockSchedule)
         prismaMock.game.findMany.mockResolvedValue(mockScheduleInDb)
         prismaMock.team.findMany.mockResolvedValue(mockTeamsInDb)
 

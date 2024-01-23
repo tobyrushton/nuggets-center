@@ -1,11 +1,12 @@
-import { scrapeSeasonAverages } from '@/server/scrapes/scrape-season-averages'
+import { describe, it, expect, vi, Mock, beforeAll } from 'vitest'
+import { scrapeSeasonAverages } from '../../../src/server/scrapes/scrape-season-averages'
 import { faker } from '@faker-js/faker'
 import { updateSeasonAverages } from '../../../src/server/functions/update-season-averages'
 import { prismaMock } from '../../singleton'
 import { generatePlayer } from './update-player.test'
 
-jest.mock('../../../src/server/scrapes/scrape-season-averages', () => ({
-    scrapeSeasonAverages: jest.fn(),
+vi.mock('../../../src/server/scrapes/scrape-season-averages', () => ({
+    scrapeSeasonAverages: vi.fn(),
 }))
 
 const generateSeasonAverage = () => ({
@@ -36,11 +37,11 @@ const mockSeasonAverages = Array.from({ length: 10 }, generateSeasonAverage)
 
 describe('updateSeasonAverages', () => {
     beforeAll(() => {
-        jest.useFakeTimers().setSystemTime(new Date('2023-01-01'))
+        vi.useFakeTimers().setSystemTime(new Date('2023-01-01'))
     })
 
     it('should update season averages', async () => {
-        (scrapeSeasonAverages as jest.Mock).mockResolvedValue(
+        (scrapeSeasonAverages as Mock).mockResolvedValue(
             mockSeasonAverages
         )
         const mockSeasonAveragesInDb = mockSeasonAverages.map(
@@ -102,7 +103,7 @@ describe('updateSeasonAverages', () => {
             })
         )
 
-        ;(scrapeSeasonAverages as jest.Mock).mockResolvedValue(
+        ;(scrapeSeasonAverages as Mock).mockResolvedValue(
             mockSeasonAverages
         )
         prismaMock.seasonAverages.findMany.mockResolvedValue(
@@ -119,7 +120,7 @@ describe('updateSeasonAverages', () => {
             ...mockSeasonAverages,
             generateSeasonAverage(),
         ]
-        ;(scrapeSeasonAverages as jest.Mock).mockResolvedValue(
+        ;(scrapeSeasonAverages as Mock).mockResolvedValue(
             newMockSeasonAverages
         )
         const mockSeasonAveragesInDb = mockSeasonAverages.map(

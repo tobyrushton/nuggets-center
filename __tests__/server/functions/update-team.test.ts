@@ -1,10 +1,11 @@
-import { updateTeams } from '@/server/functions/update-teams'
-import { scrapeTeams } from '@/server/scrapes/scrape-teams'
+import { describe, it, expect, vi, Mock } from 'vitest'
+import { updateTeams } from '../../../src/server/functions/update-teams'
+import { scrapeTeams } from '../../../src/server/scrapes/scrape-teams'
 import { faker } from '@faker-js/faker'
 import { prismaMock } from '../../singleton'
 
-jest.mock('@/server/scrapes/scrape-teams', () => ({
-    scrapeTeams: jest.fn(),
+vi.mock('../../../src/server/scrapes/scrape-teams', () => ({
+    scrapeTeams: vi.fn(),
 }))
 
 const generateTeam = () => ({
@@ -21,7 +22,7 @@ const mockTeams = Array.from({ length: 10 }, generateTeam)
 
 describe('updateTeams', () => {
     it('should add new teams', async () => {
-        (scrapeTeams as jest.Mock).mockResolvedValue(mockTeams)
+        (scrapeTeams as Mock).mockResolvedValue(mockTeams)
         prismaMock.team.findMany.mockResolvedValue([])
 
         await updateTeams()
@@ -32,7 +33,7 @@ describe('updateTeams', () => {
     })
 
     it('should not add new teams if teams are already in db', async () => {
-        (scrapeTeams as jest.Mock).mockResolvedValue(mockTeams)
+        (scrapeTeams as Mock).mockResolvedValue(mockTeams)
         prismaMock.team.findMany.mockResolvedValue(
             mockTeams.map(team => ({ ...team, id: faker.string.uuid() }))
         )
@@ -49,7 +50,7 @@ describe('updateTeams', () => {
         prismaMock.team.findMany.mockResolvedValue(
             mockTeams.map(team => ({ ...team, id: faker.string.uuid() }))
         )
-        ;(scrapeTeams as jest.Mock).mockResolvedValue(newMockTeams)
+        ;(scrapeTeams as Mock).mockResolvedValue(newMockTeams)
 
         await updateTeams()
 

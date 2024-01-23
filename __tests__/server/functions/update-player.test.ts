@@ -1,10 +1,11 @@
-import { scrapePlayers } from '@/server/scrapes/scrape-players'
+import { describe, it, expect, vi, Mock } from 'vitest'
+import { scrapePlayers } from '../../../src/server/scrapes/scrape-players'
 import { faker } from '@faker-js/faker'
 import { prismaMock } from '../../singleton'
 import { updatePlayers } from '../../../src/server/functions/update-player'
 
-jest.mock('../../../src/server/scrapes/scrape-players', () => ({
-    scrapePlayers: jest.fn(),
+vi.mock('../../../src/server/scrapes/scrape-players', () => ({
+    scrapePlayers: vi.fn(),
 }))
 
 const positions = ['PG', 'SG', 'SF', 'PF', 'C']
@@ -23,7 +24,7 @@ const mockPlayers = Array.from({ length: 10 }, generatePlayer)
 
 describe('updatePlayers', () => {
     it('should update players', async () => {
-        (scrapePlayers as jest.Mock).mockResolvedValue(mockPlayers)
+        (scrapePlayers as Mock).mockResolvedValue(mockPlayers)
         prismaMock.player.findMany.mockResolvedValue([])
         prismaMock.player.createMany.mockResolvedValue({ count: 10 })
 
@@ -42,7 +43,7 @@ describe('updatePlayers', () => {
             id: `${index + 1}`,
         }))
 
-        ;(scrapePlayers as jest.Mock).mockResolvedValue(mockPlayers)
+        ;(scrapePlayers as Mock).mockResolvedValue(mockPlayers)
         prismaMock.player.findMany.mockResolvedValue(mockPlayersInDb)
 
         await updatePlayers()
@@ -59,7 +60,7 @@ describe('updatePlayers', () => {
 
         const newMockPlayers = [...mockPlayers]
         newMockPlayers[0] = generatePlayer()
-        ;(scrapePlayers as jest.Mock).mockResolvedValue(newMockPlayers)
+        ;(scrapePlayers as Mock).mockResolvedValue(newMockPlayers)
         prismaMock.player.findMany.mockResolvedValue(mockPlayersInDb)
         prismaMock.player.createMany.mockResolvedValue({ count: 1 })
 

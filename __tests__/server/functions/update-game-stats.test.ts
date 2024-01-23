@@ -1,3 +1,4 @@
+import { describe, expect, it, vi, beforeEach, Mock } from 'vitest'
 import { prismaMock } from '../../singleton'
 import { updateGameStats } from '../../../src/server/functions/update-game-stats'
 import {
@@ -6,9 +7,9 @@ import {
 } from '../../../src/server/scrapes/scrape-game-stats'
 import { getDateOfGame } from '../../../src/lib/getDateOfGame'
 
-jest.mock('../../../src/server/scrapes/scrape-game-stats', () => ({
-    scrapeGameStats: jest.fn(),
-    getLogLinks: jest.fn(),
+vi.mock('../../../src/server/scrapes/scrape-game-stats', () => ({
+    scrapeGameStats: vi.fn(),
+    getLogLinks: vi.fn(),
 }))
 
 const mockGameStats = [
@@ -96,8 +97,8 @@ const mockGamesInDb = [
 
 describe('updateGameStats', () => {
     beforeEach(() => {
-        jest.clearAllMocks()
-        jest.useFakeTimers().setSystemTime(new Date('2023-01-03'))
+        vi.clearAllMocks()
+        vi.useFakeTimers().setSystemTime(new Date('2023-01-03'))
     })
 
     it('should update the game stats in the database if there are new games', async () => {
@@ -111,11 +112,11 @@ describe('updateGameStats', () => {
         ]
 
         // Mock the return values of the mocked functions
-        ;(getLogLinks as jest.Mock).mockResolvedValue([
+        ;(getLogLinks as Mock).mockResolvedValue([
             '_/_/_/_/_/_/player-a',
             '_/_/_/_/_/_/player-b',
         ])
-        ;(scrapeGameStats as jest.Mock).mockResolvedValue(mockGameStats)
+        ;(scrapeGameStats as Mock).mockResolvedValue(mockGameStats)
         prismaMock.player.findMany.mockResolvedValue(mockPlayersInDb)
         prismaMock.game.findMany.mockResolvedValue(mockGamesInDb)
         prismaMock.playerGame.findMany.mockResolvedValue(mockGameStatsInDb)
@@ -152,11 +153,11 @@ describe('updateGameStats', () => {
             date: getDateOfGame(gameStat.date).toISOString(),
         }))
 
-        ;(getLogLinks as jest.Mock).mockResolvedValue([
+        ;(getLogLinks as Mock).mockResolvedValue([
             '_/_/_/_/_/_/player-a',
             '_/_/_/_/_/_/player-b',
         ])
-        ;(scrapeGameStats as jest.Mock).mockResolvedValue(mockGameStats)
+        ;(scrapeGameStats as Mock).mockResolvedValue(mockGameStats)
         prismaMock.player.findMany.mockResolvedValue(mockPlayersInDb)
         prismaMock.game.findMany.mockResolvedValue(mockGamesInDb)
         prismaMock.playerGame.findMany.mockResolvedValue(mockGameStatsInDb)
