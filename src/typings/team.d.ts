@@ -13,8 +13,6 @@ namespace team {
         date: string
         home: boolean
         opponent_id: number
-        opponent_name: string
-        opponent_logo_url: string
         opponent_score: number
         home_score: number
     }

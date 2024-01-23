@@ -1,3 +1,5 @@
+import { scheduleGameIsEqual } from '@/lib/scheduleGameIsEqual'
+import { getDateOfGame } from '@/lib/getDateOfGame'
 import prisma from '../db/client'
 import { scrapeSchedule } from '../scrapes/scrape-schedule'
 
@@ -12,27 +14,63 @@ export const updateSchedule = async (): Promise<void> => {
         prisma.team.findMany(),
     ])
 
-    // if the schedule in the db is less than the schedule scraped
-    // then we need to add the new schedule
-    if (scheduleInDb.length < schedule.length) {
-        const newSchedule = schedule.filter(
-            game => !scheduleInDb.some(gameInDb => gameInDb.date === game.date)
+    const newGamesNotInDb = schedule.filter(
+        game =>
+            !scheduleInDb.some(
+                gameInDb =>
+                    getDateOfGame(game.date).toISOString() === gameInDb.date
+            )
+    )
+
+    const gamesToUpdate = schedule.filter(game =>
+        scheduleInDb.some(
+            gameInDb =>
+                getDateOfGame(game.date).toISOString() === gameInDb.date &&
+                !scheduleGameIsEqual(
+                    { opponent_score: -1, home_score: -1, ...game },
+                    gameInDb
+                )
+        )
+    )
+
+    if (gamesToUpdate.length > 0)
+        await Promise.all(
+            gamesToUpdate.map(async game => {
+                const gameId = scheduleInDb.find(
+                    gameInDb =>
+                        getDateOfGame(game.date).toISOString() === gameInDb.date
+                )?.id
+
+                if (!gameId) return
+
+                await prisma.game.update({
+                    where: { id: gameId },
+                    data: {
+                        ...game,
+                        date: getDateOfGame(game.date).toISOString(),
+                    },
+                })
+            })
         )
 
-        const newScheduleWithTeamIds = newSchedule.map(game => {
-            const opponent_id = teamsInDb.find(
-                team => team.name === game.opponent_name
-            )?.id as string
+    if (newGamesNotInDb.length > 0)
+        await Promise.all(
+            newGamesNotInDb.map(async game => {
+                const opponent_id = teamsInDb.find(
+                    team => team.name === game.opponent_name
+                )?.id
 
-            // scores are undefined if the game is in the future so score is set to -1
-            return {
-                opponent_id,
-                date: game.date,
-                home: game.home,
-                opponent_score: game.opponent_score ?? -1,
-                home_score: game.home_score ?? -1,
-            }
-        })
-        await prisma.game.createMany({ data: newScheduleWithTeamIds })
-    }
+                if (!opponent_id) return
+
+                await prisma.game.create({
+                    data: {
+                        opponent_id,
+                        date: getDateOfGame(game.date).toISOString(),
+                        home: game.home,
+                        opponent_score: game.opponent_score ?? -1,
+                        home_score: game.home_score ?? -1,
+                    },
+                })
+            })
+        )
 }
