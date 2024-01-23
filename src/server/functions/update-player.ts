@@ -11,18 +11,17 @@ export const updatePlayers = async (): Promise<void> => {
 
     // if the players in the db is less than the players scraped
     // then we need to add the new players
-    if (playersInDb.length < players.length) {
-        const newPlayers = players.filter(
-            player =>
-                !playersInDb.some(
-                    playerInDb =>
-                        `${playerInDb.first_name} ${playerInDb.last_name}` ===
-                        `${player.first_name} ${player.last_name}`
-                )
-        )
+    const playersNotInDb = players.filter(
+        player =>
+            !playersInDb.find(
+                playerInDb =>
+                    `${playerInDb.first_name} ${playerInDb.last_name}` ===
+                    `${player.first_name} ${player.last_name}`
+            )
+    )
 
+    if (playersNotInDb.length > 0)
         await prisma.player.createMany({
-            data: newPlayers,
+            data: playersNotInDb,
         })
-    }
 }

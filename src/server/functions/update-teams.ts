@@ -9,12 +9,12 @@ export const updateTeams = async (): Promise<void> => {
     const teams = await scrapeTeams()
     const teamsInDb = await prisma.team.findMany()
 
-    // if the teams in the db is less than the teams scraped
-    // then we need to add the new teams
-    if (teamsInDb.length < teams.length) {
-        const newTeams = teams.filter(
-            team => !teamsInDb.some(teamInDb => teamInDb.name === team.name)
-        )
-        await prisma.team.createMany({ data: newTeams })
-    }
+    const teamsNotInDb = teams.filter(
+        team => !teamsInDb.some(teamInDb => teamInDb.name === team.name)
+    )
+
+    if (teamsNotInDb.length > 0)
+        await prisma.team.createMany({
+            data: teamsNotInDb,
+        })
 }

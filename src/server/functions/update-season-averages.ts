@@ -1,3 +1,4 @@
+import { seasonAverageIsEqual } from '@/lib/seasonAverageIsEqual'
 import prisma from '../db/client'
 import { scrapeSeasonAverages } from '../scrapes/scrape-season-averages'
 
@@ -11,40 +12,84 @@ export const updateSeasonAverages = async (): Promise<void> => {
         include: { player: true },
     })
 
-    // if the season averages in the db is less than the season averages scraped
-    // then we need to add the new season averages
-    if (seasonAveragesInDb.length < seasonAverages.length) {
-        const newSeasonAverages = seasonAverages.filter(
-            seasonAverage =>
-                !seasonAveragesInDb.some(
-                    seasonAverageInDb =>
-                        `${seasonAverageInDb.player.first_name} ${seasonAverageInDb.player.last_name}` ===
-                        seasonAverage.player_name
-                )
-        )
+    const newSeasonAverages = seasonAverages.filter(
+        seasonAverage =>
+            !seasonAveragesInDb.some(
+                seasonAverageInDb =>
+                    `${seasonAverageInDb.player.first_name} ${seasonAverageInDb.player.last_name}` ===
+                    seasonAverage.player_name
+            )
+    )
 
-        const newSeasonAveragesWithPlayerId = newSeasonAverages.map(
-            seasonAverage => {
-                const player = seasonAveragesInDb.find(
-                    seasonAverageInDb =>
-                        seasonAverageInDb.player.first_name ===
-                            seasonAverage.player_name.split(' ')[0] &&
-                        seasonAverageInDb.player.last_name ===
-                            seasonAverage.player_name.split(' ')[1]
-                )
+    const seasonAveragesToUpdate = seasonAveragesInDb
+        .map(seasonAverageInDb => {
+            const seasonAverage = seasonAverages.find(
+                average =>
+                    `${seasonAverageInDb.player.first_name} ${seasonAverageInDb.player.last_name}` ===
+                    average.player_name
+            )
 
-                const { player_name: _, min, ...rest } = seasonAverage
-                return {
-                    ...rest,
-                    player_id: player?.player_id as string,
-                    season: '2023-24',
-                    min: min.toString(),
-                }
+            if (!seasonAverage) return undefined
+            const { player_name: _, ...rest } = seasonAverage
+            const { player: __, id, player_id, ...restInDb } = seasonAverageInDb
+            if (
+                seasonAverageIsEqual(
+                    { ...rest, season: '2023-24', min: rest.min.toString() },
+                    restInDb
+                )
+            )
+                return undefined
+            return {
+                ...rest,
+                player_id,
+                season: '2023-24',
+                min: rest.min.toString(),
+                id,
             }
-        )
-
-        await prisma.seasonAverages.createMany({
-            data: newSeasonAveragesWithPlayerId,
         })
+        .filter(
+            seasonAverage => seasonAverage !== undefined
+        ) as unknown as (player.ISeasonAverage & { id: string })[]
+
+    if (newSeasonAverages.length > 0) {
+        await Promise.all(
+            newSeasonAverages.map(async seasonAverage => {
+                const player = await prisma.player.findFirst({
+                    where: {
+                        first_name: seasonAverage.player_name.slice(
+                            0,
+                            seasonAverage.player_name.indexOf(' ')
+                        ),
+                        last_name: seasonAverage.player_name.slice(
+                            seasonAverage.player_name.indexOf(' ') + 1
+                        ),
+                    },
+                })
+
+                if (!player) return // TODO: handle this error
+                const { player_name: _, ...rest } = seasonAverage
+
+                await prisma.seasonAverages.create({
+                    data: {
+                        ...rest,
+                        player_id: player.id,
+                        season: '2023-24',
+                        min: seasonAverage.min.toString(),
+                    },
+                })
+            })
+        )
     }
+
+    if (seasonAveragesToUpdate.length > 0)
+        await Promise.all(
+            seasonAveragesToUpdate.map(async seasonAverage => {
+                await prisma.seasonAverages.update({
+                    where: {
+                        id: seasonAverage.id,
+                    },
+                    data: seasonAverage,
+                })
+            })
+        )
 }
