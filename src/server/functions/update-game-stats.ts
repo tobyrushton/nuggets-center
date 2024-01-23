@@ -6,9 +6,11 @@ import { scrapeGameStats, getLogLinks } from '../scrapes/scrape-game-stats'
  * @description Update the game stats for all players
  */
 export const updateGameStats = async (): Promise<void> => {
-    const links = await getLogLinks()
-    const players = await prisma.player.findMany()
-    const games = await prisma.game.findMany()
+    const [links, players, games] = await Promise.all([
+        getLogLinks(),
+        prisma.player.findMany(),
+        prisma.game.findMany(),
+    ])
 
     await Promise.all(
         links.map(async link => {
@@ -44,13 +46,12 @@ export const updateGameStats = async (): Promise<void> => {
                 }
             })
 
-            const filteredGameStats = gamesWithIds.filter(gameStat => {
-                const gameStatInDb = gameStatsInDb.find(
+            const filteredGameStats = gamesWithIds.filter(gameStat =>
+                !gameStatsInDb.find(
                     gmeStatInDb => gmeStatInDb.game_id === gameStat.game_id
                 )
-                if (!gameStatInDb) return true
-                return false
-            })
+            )
+            
             if (filteredGameStats.length > 0)
                 await prisma.playerGame.createMany({
                     data: filteredGameStats,
