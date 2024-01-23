@@ -6,8 +6,10 @@ import { scrapePlayers } from '../scrapes/scrape-players'
  * @returns {Promise<void>}
  */
 export const updatePlayers = async (): Promise<void> => {
-    const players = await scrapePlayers()
-    const playersInDb = await prisma.player.findMany()
+    const [players, playersInDb] = await Promise.all([
+        scrapePlayers(),
+        prisma.player.findMany(),
+    ])
 
     // if the players in the db is less than the players scraped
     // then we need to add the new players
