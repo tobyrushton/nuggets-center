@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, Mock, beforeAll } from 'vitest'
-import { scrapeSeasonAverages } from '../../../src/server/scrapes/scrape-season-averages'
 import { faker } from '@faker-js/faker'
+import { scrapeSeasonAverages } from '../../../src/server/scrapes/scrape-season-averages'
 import { updateSeasonAverages } from '../../../src/server/functions/update-season-averages'
 import { prismaMock } from '../../singleton'
 import { generatePlayer } from './update-player.test'
@@ -41,9 +41,7 @@ describe('updateSeasonAverages', () => {
     })
 
     it('should update season averages', async () => {
-        (scrapeSeasonAverages as Mock).mockResolvedValue(
-            mockSeasonAverages
-        )
+        (scrapeSeasonAverages as Mock).mockResolvedValue(mockSeasonAverages)
         const mockSeasonAveragesInDb = mockSeasonAverages.map(
             ({ player_name, ...seasonAverage }) => ({
                 ...seasonAverage,
@@ -103,9 +101,7 @@ describe('updateSeasonAverages', () => {
             })
         )
 
-        ;(scrapeSeasonAverages as Mock).mockResolvedValue(
-            mockSeasonAverages
-        )
+        ;(scrapeSeasonAverages as Mock).mockResolvedValue(mockSeasonAverages)
         prismaMock.seasonAverages.findMany.mockResolvedValue(
             mockSeasonAveragesInDb
         )
@@ -120,9 +116,7 @@ describe('updateSeasonAverages', () => {
             ...mockSeasonAverages,
             generateSeasonAverage(),
         ]
-        ;(scrapeSeasonAverages as Mock).mockResolvedValue(
-            newMockSeasonAverages
-        )
+        ;(scrapeSeasonAverages as Mock).mockResolvedValue(newMockSeasonAverages)
         const mockSeasonAveragesInDb = mockSeasonAverages.map(
             ({ player_name, ...seasonAverage }) => ({
                 ...seasonAverage,

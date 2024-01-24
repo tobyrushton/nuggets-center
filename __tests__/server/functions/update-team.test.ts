@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, Mock } from 'vitest'
+import { faker } from '@faker-js/faker'
 import { updateTeams } from '../../../src/server/functions/update-teams'
 import { scrapeTeams } from '../../../src/server/scrapes/scrape-teams'
-import { faker } from '@faker-js/faker'
 import { prismaMock } from '../../singleton'
 
 vi.mock('../../../src/server/scrapes/scrape-teams', () => ({

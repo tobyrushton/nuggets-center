@@ -16,7 +16,7 @@ export const updateGameStats = async (): Promise<void> => {
         links.map(async link => {
             const gameStats = await scrapeGameStats(link)
 
-            const playerName = link.split('/')[6].replace('-', ' ')
+            const playerName = link.split('/')[8].replace('-', ' ')
             const player = players.find(
                 plyer =>
                     `${plyer.first_name} ${plyer.last_name}`.toLowerCase() ===

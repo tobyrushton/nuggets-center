@@ -1,9 +1,8 @@
 import jsdom from 'jsdom'
-import { getDateOfGame } from '@/lib/getDateOfGame'
 
 const { JSDOM } = jsdom
 
-interface IScheduleScrape {
+export interface IScheduleScrape {
     date: string
     home: boolean
     opponent_name: string
@@ -32,7 +31,8 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
         if (content[0].textContent === 'DATE') return
 
         // data that is the same for bothy completed and uncompleted games
-        const date = content[0].textContent as string
+        const dateString = content[0].textContent as string
+        const date = dateString.slice(dateString.indexOf(' ') + 1)
         const opponent = content[1].textContent as string
         const [homeIndicator, opponentName] = opponent.split(' ')
         const home = homeIndicator === 'vs.'
@@ -44,7 +44,7 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
                 .slice(1, score.length - 1)
                 .split('-')
             schedule.push({
-                date: getDateOfGame(date).toISOString(),
+                date,
                 home,
                 opponent_name: opponentName,
                 opponent_score: parseInt(opponentScore, 10),
@@ -54,7 +54,7 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
         else if (content.length === 5) {
             // const time = content[2].textContent as string
             schedule.push({
-                date: getDateOfGame('date').toISOString(),
+                date,
                 home,
                 opponent_name: opponentName,
             })

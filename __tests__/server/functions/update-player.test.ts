@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, Mock } from 'vitest'
-import { scrapePlayers } from '../../../src/server/scrapes/scrape-players'
 import { faker } from '@faker-js/faker'
+import { scrapePlayers } from '../../../src/server/scrapes/scrape-players'
 import { prismaMock } from '../../singleton'
 import { updatePlayers } from '../../../src/server/functions/update-player'
 

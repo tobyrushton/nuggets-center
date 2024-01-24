@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import { faker } from '@faker-js/faker'
 
 export const generateSeasonAverage = () => ({
     player_name: `${faker.person.firstName()} ${faker.person.lastName()}`,

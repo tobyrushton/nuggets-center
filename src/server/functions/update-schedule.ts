@@ -43,10 +43,11 @@ export const updateSchedule = async (): Promise<void> => {
 
                 if (!gameId) return
 
+                const { opponent_name: _, ...gameData } = game
                 await prisma.game.update({
                     where: { id: gameId },
                     data: {
-                        ...game,
+                        ...gameData,
                         date: getDateOfGame(game.date).toISOString(),
                     },
                 })

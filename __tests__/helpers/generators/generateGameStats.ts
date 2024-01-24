@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker"
+import { faker } from '@faker-js/faker'
 
 export const generateGameStats = () => ({
     pts: faker.number.int({ min: 0, max: 50 }),

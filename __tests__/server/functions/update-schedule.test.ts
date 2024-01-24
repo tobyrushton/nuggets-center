@@ -52,24 +52,22 @@ describe('updateSchedule', () => {
         expect(prismaMock.game.findMany).toHaveBeenCalled()
         expect(prismaMock.team.findMany).toHaveBeenCalled()
         expect(prismaMock.game.create).toHaveBeenCalledWith({
-            data:
-                {
-                    opponent_id: '2',
-                    date: new Date('2024-01-02').toISOString(),
-                    home: false,
-                    opponent_score: -1,
-                    home_score: -1,
-                },
+            data: {
+                opponent_id: '2',
+                date: new Date('2024-01-02').toISOString(),
+                home: false,
+                opponent_score: -1,
+                home_score: -1,
+            },
         })
         expect(prismaMock.game.create).toHaveBeenCalledWith({
-            data:
-                {
-                    opponent_id: '2',
-                    date: new Date('2024-01-03').toISOString(),
-                    home: true,
-                    opponent_score: -1,
-                    home_score: -1,
-                },
+            data: {
+                opponent_id: '2',
+                date: new Date('2024-01-03').toISOString(),
+                home: true,
+                opponent_score: -1,
+                home_score: -1,
+            },
         })
     })
 
@@ -161,10 +159,11 @@ describe('updateSchedule', () => {
         expect(prismaMock.game.findMany).toHaveBeenCalled()
         expect(prismaMock.team.findMany).toHaveBeenCalled()
         mockSchedule.forEach((game, index) => {
+            const { opponent_name: _, ...rest } = game
             expect(prismaMock.game.update).toHaveBeenCalledWith({
                 where: { id: index.toString() },
                 data: {
-                    ...game,
+                    ...rest,
                     date: getDateOfGame(game.date).toISOString(),
                 },
             })

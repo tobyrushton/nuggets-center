@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import { faker } from '@faker-js/faker'
 
 const positions = ['PG', 'SG', 'SF', 'PF', 'C']
 

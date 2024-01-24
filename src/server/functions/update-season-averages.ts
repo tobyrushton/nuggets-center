@@ -56,15 +56,19 @@ export const updateSeasonAverages = async (): Promise<void> => {
     if (newSeasonAverages.length > 0) {
         await Promise.all(
             newSeasonAverages.map(async seasonAverage => {
+                const spaceIndex = seasonAverage.player_name.indexOf(' ')
+                const first_name = seasonAverage.player_name.slice(
+                    0,
+                    spaceIndex
+                )
+                const last_name = seasonAverage.player_name.slice(
+                    spaceIndex + 1
+                )
+
                 const player = await prisma.player.findFirst({
                     where: {
-                        first_name: seasonAverage.player_name.slice(
-                            0,
-                            seasonAverage.player_name.indexOf(' ')
-                        ),
-                        last_name: seasonAverage.player_name.slice(
-                            seasonAverage.player_name.indexOf(' ') + 1
-                        ),
+                        first_name,
+                        last_name,
                     },
                 })
 

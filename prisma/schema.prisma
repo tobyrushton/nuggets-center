@@ -11,6 +11,7 @@ model Player {
   id              String          @id @default(uuid())
   first_name      String
   last_name       String
+  position        String
   weight          Int
   height_feet     Int
   height_inches   Int
@@ -80,7 +81,7 @@ model Team {
 
 model Game {
   id             String       @id @default(uuid())
-  date           String // stored as ISO string
+  date           String       @unique
   home           Boolean
   opponent       Team         @relation(fields: [opponent_id], references: [id])
   opponent_id    String

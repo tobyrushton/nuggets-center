@@ -113,8 +113,8 @@ describe('updateGameStats', () => {
 
         // Mock the return values of the mocked functions
         ;(getLogLinks as Mock).mockResolvedValue([
-            '_/_/_/_/_/_/player-a',
-            '_/_/_/_/_/_/player-b',
+            '_/_/_/_/_/_/_/_/player-a',
+            '_/_/_/_/_/_/_/_/player-b',
         ])
         ;(scrapeGameStats as Mock).mockResolvedValue(mockGameStats)
         prismaMock.player.findMany.mockResolvedValue(mockPlayersInDb)
@@ -154,8 +154,8 @@ describe('updateGameStats', () => {
         }))
 
         ;(getLogLinks as Mock).mockResolvedValue([
-            '_/_/_/_/_/_/player-a',
-            '_/_/_/_/_/_/player-b',
+            '_/_/_/_/_/_/_/_/player-a',
+            '_/_/_/_/_/_/_/_/player-b',
         ])
         ;(scrapeGameStats as Mock).mockResolvedValue(mockGameStats)
         prismaMock.player.findMany.mockResolvedValue(mockPlayersInDb)
