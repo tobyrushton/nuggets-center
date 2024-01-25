@@ -61,11 +61,15 @@ export const scrapeGameStats = async (
     const res = await fetch(url, { cache: 'no-cache' })
     const dom = new JSDOM(await res.text())
 
+    const gameStats: IScrapeGameStats[] = []
+
     const table =
         dom.window.document.querySelector('.Table__Title')?.parentElement
-    const rows = (table as Element).querySelectorAll('.Table__TR')
 
-    const gameStats: IScrapeGameStats[] = []
+    // if player has not played this season
+    if (!table) return gameStats
+
+    const rows = (table as Element).querySelectorAll('.Table__TR')
 
     rows.forEach(row => {
         const cells = row.querySelectorAll('.Table__TD')
