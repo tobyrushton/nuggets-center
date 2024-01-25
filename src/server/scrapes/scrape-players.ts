@@ -52,8 +52,11 @@ export const scrapePlayers = async (): Promise<IPlayerScrape[]> => {
             throw new Error(`Invalid heightInches: ${heightInches}`)
         if (!profileUrl) throw new Error(`Invalid profileUrl: ${profileUrl}`)
 
-        const index = name.indexOf(' ') + 1
-        const [firstName, lastName] = [name.slice(0, index), name.slice(index)]
+        const index = name.indexOf(' ')
+        const [firstName, lastName] = [
+            name.slice(0, index),
+            name.slice(index + 1),
+        ]
 
         players.push({
             first_name: firstName,
