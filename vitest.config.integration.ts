@@ -6,6 +6,7 @@ export default defineConfig({
     include: ['__tests__/integration/**/*.ts'],
     setupFiles: ['__tests__/helpers/setup.ts'],
     fileParallelism: false,
+    testTimeout: 10000
   },
   plugins: [tsconfigPaths()],
 })

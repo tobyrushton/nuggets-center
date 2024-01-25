@@ -57,8 +57,8 @@ export const updateSchedule = async (): Promise<void> => {
     if (newGamesNotInDb.length > 0)
         await Promise.all(
             newGamesNotInDb.map(async game => {
-                const opponent_id = teamsInDb.find(
-                    team => team.name === game.opponent_name
+                const opponent_id = teamsInDb.find(team =>
+                    team.name.includes(game.opponent_name)
                 )?.id
 
                 if (!opponent_id) return
