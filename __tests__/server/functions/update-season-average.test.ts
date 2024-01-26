@@ -22,7 +22,7 @@ describe('updateSeasonAverages', () => {
             ({ player_name, ...seasonAverage }) => ({
                 ...seasonAverage,
                 id: faker.string.uuid(),
-                season:  2023,
+                season: 2023,
                 min: seasonAverage.min.toString(),
                 player_id: faker.string.uuid(),
                 games_played: 100, // this should cause an update

@@ -35,7 +35,7 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
         const date = dateString.slice(dateString.indexOf(' ') + 1)
         const opponent = content[1].textContent as string
         const [homeIndicator, opponentName] = opponent.split(' ')
-        const home = homeIndicator === 'vs.'
+        const home = homeIndicator === 'vs'
 
         // if game completed -> in the past
         if (content.length === 7) {
