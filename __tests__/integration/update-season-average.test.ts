@@ -70,7 +70,7 @@ describe('updateSeasonAverages', () => {
 
         expect(secondCount).toBe(firstCount)
 
-        firstAverages.forEach((average, index) => {
+        firstAverages.forEach(average => {
             const secondAverage = secondAverages.find(
                 avg => avg.id === average.id
             )

@@ -1,4 +1,5 @@
 import { getDateOfGame } from '@/lib/getDateOfGame'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import prisma from '../db/client'
 import { scrapeGameStats, getLogLinks } from '../scrapes/scrape-game-stats'
 
@@ -21,9 +22,11 @@ export const updateGameStats = async (): Promise<void> => {
     await Promise.all(
         links.map(async link => {
             const playerNameWithDash = link.split('/')[9]
-            // TODO: Function to update the year !!
             const gameStats = await scrapeGameStats(
-                link.replace(playerNameWithDash, 'type/nba/year/2024')
+                link.replace(
+                    playerNameWithDash,
+                    `type/nba/year/${getCurrentSeason()}`
+                )
             )
 
             const playerName = getPlayerName(playerNameWithDash)

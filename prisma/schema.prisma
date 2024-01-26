@@ -25,7 +25,7 @@ model SeasonAverages {
   games_played Int
   player       Player @relation(fields: [player_id], references: [id])
   player_id    String @unique
-  season       String
+  season       Int
   min          String
   fgm          Float
   fga          Float
