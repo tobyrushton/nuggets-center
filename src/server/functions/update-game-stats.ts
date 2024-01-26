@@ -1,6 +1,13 @@
 import { getDateOfGame } from '@/lib/getDateOfGame'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import prisma from '../db/client'
 import { scrapeGameStats, getLogLinks } from '../scrapes/scrape-game-stats'
+
+const getPlayerName = (rawName: string): string => {
+    const name = rawName.replace('-', ' ')
+    if (name.includes('jr')) return name.replace('-jr', ' jr.')
+    return name
+}
 
 /**
  * @description Update the game stats for all players
@@ -14,9 +21,15 @@ export const updateGameStats = async (): Promise<void> => {
 
     await Promise.all(
         links.map(async link => {
-            const gameStats = await scrapeGameStats(link)
+            const playerNameWithDash = link.split('/')[9]
+            const gameStats = await scrapeGameStats(
+                link.replace(
+                    playerNameWithDash,
+                    `type/nba/year/${getCurrentSeason()}`
+                )
+            )
 
-            const playerName = link.split('/')[8].replace('-', ' ')
+            const playerName = getPlayerName(playerNameWithDash)
             const player = players.find(
                 plyer =>
                     `${plyer.first_name} ${plyer.last_name}`.toLowerCase() ===
@@ -36,11 +49,14 @@ export const updateGameStats = async (): Promise<void> => {
                 const dateISO = getDateOfGame(gameStat.date).toISOString()
                 const game = games.find(gme => gme.date === dateISO)
 
-                if (!game) throw new Error(`Game not found for date ${dateISO}`)
+                if (!game)
+                    throw new Error(
+                        `Game not found for date ${dateISO} ${player.first_name} ${player.last_name}`
+                    )
+                const { date: _, ...rest } = gameStat
 
                 return {
-                    ...gameStat,
-                    date: dateISO,
+                    ...rest,
                     game_id: game.id,
                     player_id: player.id,
                 }

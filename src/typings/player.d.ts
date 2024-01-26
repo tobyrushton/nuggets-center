@@ -15,7 +15,7 @@ namespace player {
     interface ISeasonAverage {
         games_played: number
         player_id: string
-        season: string
+        season: number
         min: string
         fgm: number
         fga: number

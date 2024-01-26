@@ -1,50 +1,45 @@
-import { describe, it, vi, expect, Mock } from 'vitest'
-import { scrapePlayers } from '@/server/scrapes/scrape-players'
+import { describe, it, expect } from 'vitest'
 import { updatePlayers } from '@/server/functions/update-player'
-import { generatePlayer } from '../helpers/generators'
 import prisma from '../helpers/prisma'
-
-vi.mock('../../src/server/scrapes/scrape-players', () => ({
-    scrapePlayers: vi.fn(),
-}))
-
-const mockPlayers = Array.from({ length: 16 }, generatePlayer)
 
 describe('updatePlayers', () => {
     it('should add new players when none are in db', async () => {
-        (scrapePlayers as Mock).mockResolvedValue(mockPlayers)
         await updatePlayers()
 
         const count = await prisma.player.count()
-        expect(count).toBe(16)
+
+        // nba team will have bteween 14-18 players
+        expect(count).toBeGreaterThanOrEqual(14)
+        expect(count).toBeLessThanOrEqual(18)
     })
 
     it('should add new player when found in scrape', async () => {
-        const newPlayer = generatePlayer()
-        const players = [...mockPlayers, newPlayer]
-        ;(scrapePlayers as Mock).mockResolvedValue(players)
-        const { count: firstCount } = await prisma.player.createMany({
-            data: mockPlayers,
+        await updatePlayers()
+
+        const firstCount = await prisma.player.count()
+        const random = await prisma.player.findFirst()
+        await prisma.player.delete({
+            where: { id: (random as { id: string }).id },
         })
-        expect(firstCount).toBe(16)
+        const secondCount = await prisma.player.count()
+
+        expect(secondCount).toBe(firstCount - 1)
 
         await updatePlayers()
 
-        const count = await prisma.player.count()
-        expect(count).toBe(17)
+        const thirdCount = await prisma.player.count()
+        expect(thirdCount).toBe(firstCount)
     })
 
     it('should not update players that are already in db', async () => {
-        (scrapePlayers as Mock).mockResolvedValue(mockPlayers)
-        const { count: firstCount } = await prisma.player.createMany({
-            data: mockPlayers,
-        })
+        await updatePlayers()
 
-        expect(firstCount).toBe(16)
+        const firstCount = await prisma.player.count()
 
         await updatePlayers()
 
-        const count = await prisma.player.count()
-        expect(count).toBe(16)
+        const secondCount = await prisma.player.count()
+
+        expect(firstCount).toBe(secondCount)
     })
 })

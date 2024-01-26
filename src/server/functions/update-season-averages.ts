@@ -1,4 +1,5 @@
 import { seasonAverageIsEqual } from '@/lib/seasonAverageIsEqual'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import prisma from '../db/client'
 import { scrapeSeasonAverages } from '../scrapes/scrape-season-averages'
 
@@ -36,7 +37,11 @@ export const updateSeasonAverages = async (): Promise<void> => {
             const { player: __, id, player_id, ...restInDb } = seasonAverageInDb
             if (
                 seasonAverageIsEqual(
-                    { ...rest, season: '2023-24', min: rest.min.toString() },
+                    {
+                        ...rest,
+                        season: getCurrentSeason(),
+                        min: rest.min.toString(),
+                    },
                     restInDb
                 )
             )
@@ -44,7 +49,7 @@ export const updateSeasonAverages = async (): Promise<void> => {
             return {
                 ...rest,
                 player_id,
-                season: '2023-24',
+                season: getCurrentSeason(),
                 min: rest.min.toString(),
                 id,
             }
@@ -79,7 +84,7 @@ export const updateSeasonAverages = async (): Promise<void> => {
                     data: {
                         ...rest,
                         player_id: player.id,
-                        season: '2023-24',
+                        season: getCurrentSeason(),
                         min: seasonAverage.min.toString(),
                     },
                 })
