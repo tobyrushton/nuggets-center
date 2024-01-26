@@ -10,6 +10,9 @@
     "test": "vitest",
     "test:int": "./scripts/run-integration.sh"
   },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} -r tsconfig-paths/register prisma/seed.ts"
+  },
   "dependencies": {
     "@netlify/functions": "^2.5.1",
     "@prisma/client": "^5.6.0",
@@ -40,6 +43,7 @@
     "prettier": "^3.0.3",
     "prisma": "^5.6.0",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5",
     "vite-tsconfig-paths": "^4.3.1",
     "vitest": "^1.2.1",
