@@ -30,6 +30,13 @@ describe('scrapeSeasonAverages', () => {
             expect(typeof seasonAverage.ftm).toBe('number')
             expect(typeof seasonAverage.fta).toBe('number')
             expect(typeof seasonAverage.ft_pct).toBe('number')
+
+            // validate
+            expect(seasonAverage.fga).toBeGreaterThanOrEqual(seasonAverage.fgm)
+            expect(seasonAverage.fg3a).toBeGreaterThanOrEqual(
+                seasonAverage.fg3m
+            )
+            expect(seasonAverage.fta).toBeGreaterThanOrEqual(seasonAverage.ftm)
         })
     })
 })
