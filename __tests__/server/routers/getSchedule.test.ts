@@ -1,0 +1,54 @@
+import { describe, it, expect } from 'vitest'
+import { serverClient } from '@/app/_trpc/serverClient'
+import { faker } from '@faker-js/faker'
+import { prismaMock } from '../../singleton'
+import {
+    generateGameWithScore,
+    validateSchedule,
+    generateTeam,
+} from '../../helpers/generators'
+
+const mockTeams = Array.from({ length: 5 }, generateTeam)
+const mockTeamNames = mockTeams.map(team => team.name)
+
+const mockSchedule = validateSchedule(
+    Array.from({ length: 80 }, () => ({
+        ...generateGameWithScore(mockTeamNames),
+        id: faker.string.uuid(),
+        opponent: {
+            ...faker.helpers.arrayElement(mockTeams),
+            id: faker.string.uuid(),
+        },
+    }))
+) as any
+
+describe('api/getSchedule', () => {
+    it('should return the schedule', async () => {
+        prismaMock.game.findMany.mockResolvedValueOnce(mockSchedule)
+
+        const { schedule } = await serverClient.getSchedule()
+
+        expect(prismaMock.game.findMany).toHaveBeenCalledWith({
+            include: {
+                opponent: true,
+            },
+        })
+
+        expect(schedule).toHaveLength(80)
+    })
+
+    it('should return the schedule with a limit', async () => {
+        prismaMock.game.findMany.mockResolvedValueOnce(mockSchedule.slice(0, 5))
+
+        const { schedule } = await serverClient.getSchedule({ take: 5 })
+
+        expect(prismaMock.game.findMany).toHaveBeenCalledWith({
+            take: 5,
+            include: {
+                opponent: true,
+            },
+        })
+
+        expect(schedule).toHaveLength(5)
+    })
+})

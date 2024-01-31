@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { ReactNode } from 'react'
 import { Inter } from 'next/font/google'
+import { TRPCProvider } from '@/components/providers/TRPCProvider'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -13,7 +14,9 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: ReactNode }): ReactNode => {
     return (
         <html lang="en">
-            <body className={inter.className}>{children}</body>
+            <body className={inter.className}>
+                <TRPCProvider>{children}</TRPCProvider>
+            </body>
         </html>
     )
 }
