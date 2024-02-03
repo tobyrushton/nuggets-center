@@ -30,13 +30,14 @@ export const getSchedule = publicProcedure
                 z.object({
                     id: z.string(),
                     date: z.date(),
+                    home: z.boolean(),
                     opponent: z.object({
                         id: z.string(),
                         name: z.string(),
                         logo_url: z.string(),
                     }),
-                    opponent_score: z.number().optional(),
-                    home_score: z.number().optional(),
+                    opponent_score: z.number(),
+                    home_score: z.number(),
                 })
             ),
         })
