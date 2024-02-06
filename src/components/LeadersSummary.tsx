@@ -1,0 +1,79 @@
+import 'server-only'
+import { FC } from 'react'
+import { serverClient } from '@/app/_trpc/serverClient'
+import Link from 'next/link'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
+import { Separator } from './ui/separator'
+
+type Leader = 'pts' | 'reb' | 'ast' | 'stl' | 'blk' | 'fg_pct'
+
+interface LeaderProps {
+    leader: Leader
+}
+
+const Leader: FC<LeaderProps> = async ({ leader }) => {
+    const { leaders } = await serverClient.getLeaders({
+        category: leader,
+        take: 1,
+    })
+    const player = leaders[0]
+
+    return (
+        <span className="flex flex-col gap-1">
+            <h3>{leader.toUpperCase().replace('_', ' ')}</h3>
+            <Link
+                href={`/player/${player.player_id}`}
+                className="flex flex-row gap-2"
+            >
+                <Avatar className="w-12 h-12">
+                    <AvatarImage src={player.profile_url} />
+                    <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <span>
+                    <p>{player.player_name}</p>
+                    <p>{player.value}</p>
+                </span>
+            </Link>
+            <Separator />
+        </span>
+    )
+}
+
+export const LeadersSummary: FC = () => {
+    const offense: Leader[] = ['pts', 'ast', 'fg_pct']
+    const defense: Leader[] = ['reb', 'stl', 'blk']
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>
+                    <Link href="/leaders">Leaders</Link>
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Tabs defaultValue="offense">
+                    <TabsList className="w-full">
+                        <TabsTrigger className="w-1/2" value="offense">
+                            Offense
+                        </TabsTrigger>
+                        <TabsTrigger className="w-1/2" value="defense">
+                            Defense
+                        </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="offense">
+                        {offense.map(leader => (
+                            <Leader key={leader} leader={leader} />
+                        ))}
+                    </TabsContent>
+                    <TabsContent value="defense">
+                        {defense.map(leader => (
+                            <Leader key={leader} leader={leader} />
+                        ))}
+                    </TabsContent>
+                </Tabs>
+            </CardContent>
+        </Card>
+    )
+}

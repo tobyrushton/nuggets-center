@@ -49,6 +49,7 @@ export const getLeaders = publicProcedure
                     player_id: z.string(),
                     player_name: z.string(),
                     value: z.number(),
+                    profile_url: z.string(),
                 })
             ),
         })
@@ -68,6 +69,7 @@ export const getLeaders = publicProcedure
             leaders: leaders.map(leader => ({
                 player_id: leader.player.id,
                 player_name: `${leader.player.first_name} ${leader.player.last_name}`,
+                profile_url: leader.player.profile_url,
                 value:
                     input.category === 'min'
                         ? parseFloat(leader[input.category])
