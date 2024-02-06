@@ -32,6 +32,9 @@ describe('api/getSchedule', () => {
             include: {
                 opponent: true,
             },
+            orderBy: {
+                date: 'asc'
+            }
         })
 
         expect(schedule).toHaveLength(80)
@@ -47,6 +50,9 @@ describe('api/getSchedule', () => {
             include: {
                 opponent: true,
             },
+            orderBy: {
+                date: 'asc'
+            }
         })
 
         expect(schedule).toHaveLength(5)

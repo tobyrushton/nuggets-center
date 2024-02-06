@@ -52,7 +52,7 @@ export const getSchedule = publicProcedure
                     ? {
                           date: input.method === 'next' ? 'asc' : 'desc',
                       }
-                    : undefined,
+                    : { date: 'asc' },
             where:
                 input.method && input.method !== 'all'
                     ? {
