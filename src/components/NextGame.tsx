@@ -9,7 +9,7 @@ import dayjs from 'dayjs'
 
 export const NextGame: FC = async () => {
     const [{ schedule: nextGame }, { team }] = await Promise.all([
-        serverClient.getSchedule({ take: 1 }),
+        serverClient.getSchedule({ take: 1, method: 'next' }),
         serverClient.getTeam({ name: 'Denver Nuggets' }),
     ])
 

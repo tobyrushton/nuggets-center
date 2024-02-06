@@ -18,11 +18,10 @@ import { publicProcedure } from '../trpc'
  */
 export const getSchedule = publicProcedure
     .input(
-        z
-            .object({
-                take: z.number(),
-            })
-            .optional()
+        z.object({
+            take: z.number().optional(),
+            method: z.enum(['next', 'last', 'all']).optional(),
+        })
     )
     .output(
         z.object({
@@ -48,6 +47,21 @@ export const getSchedule = publicProcedure
             include: {
                 opponent: true,
             },
+            orderBy:
+                input.method && input.method !== 'all'
+                    ? {
+                          date: input.method === 'next' ? 'asc' : 'desc',
+                      }
+                    : undefined,
+            where:
+                input.method && input.method !== 'all'
+                    ? {
+                          home_score:
+                              input.method === 'next' ? -1 : { not: -1 },
+                          opponent_score:
+                              input.method === 'next' ? -1 : { not: -1 },
+                      }
+                    : undefined,
         })
 
         return {
