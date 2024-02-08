@@ -1,16 +1,33 @@
 import 'server-only'
-import { FC } from 'react'
+import { FC, Suspense } from 'react'
 import { serverClient } from '@/app/_trpc/serverClient'
 import Link from 'next/link'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import { Separator } from './ui/separator'
+import { Skeleton } from './ui/skeleton'
 
 type LeaderType = 'pts' | 'reb' | 'ast' | 'stl' | 'blk' | 'fg_pct'
 
 interface LeaderProps {
     leader: LeaderType
+}
+
+const LeaderSkeleton: FC<LeaderProps> = ({ leader }) => {
+    return (
+        <span className="flex flex-col gap-1">
+            <h3>{leader.toUpperCase().replace('_', ' ')}</h3>
+            <div className="flex flex-row gap-2">
+                <Skeleton className="w-12 h-12 rounded-full" />
+                <span className="flex flex-col gap-2">
+                    <Skeleton className="h-5 w-20" />
+                    <Skeleton className="h-5 w-8" />
+                </span>
+            </div>
+            <Separator />
+        </span>
+    )
 }
 
 const Leader: FC<LeaderProps> = async ({ leader }) => {
@@ -29,7 +46,9 @@ const Leader: FC<LeaderProps> = async ({ leader }) => {
             >
                 <Avatar className="w-12 h-12">
                     <AvatarImage src={player.profile_url} />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback>
+                        <Skeleton className="w-12 h-12 rounded-full" />
+                    </AvatarFallback>
                 </Avatar>
                 <span>
                     <p>{player.player_name}</p>
@@ -64,12 +83,22 @@ export const LeadersSummary: FC = () => {
                     </TabsList>
                     <TabsContent value="offense">
                         {offense.map(leader => (
-                            <Leader key={leader} leader={leader} />
+                            <Suspense
+                                key={leader}
+                                fallback={<LeaderSkeleton leader={leader} />}
+                            >
+                                <Leader leader={leader} />
+                            </Suspense>
                         ))}
                     </TabsContent>
                     <TabsContent value="defense">
                         {defense.map(leader => (
-                            <Leader key={leader} leader={leader} />
+                            <Suspense
+                                key={leader}
+                                fallback={<LeaderSkeleton leader={leader} />}
+                            >
+                                <Leader leader={leader} />
+                            </Suspense>
                         ))}
                     </TabsContent>
                 </Tabs>

@@ -6,6 +6,36 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Image from 'next/image'
 import Link from 'next/link'
 import dayjs from 'dayjs'
+import { Skeleton } from './ui/skeleton'
+
+export const NextGameSkeleton: FC = () => {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>
+                    <Skeleton className="h-8 w-36" />
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-row">
+                <div className="flex grow justify-center">
+                    <div className="flex flex-col gap-5">
+                        <Skeleton className="w-24 h-24 rounded-full self-center" />
+                        <Skeleton className="h-6 w-32" />
+                    </div>
+                </div>
+                <div className="flex flex-wrap content-center">
+                    <Skeleton className="w-8 h-5" />
+                </div>
+                <div className="flex grow justify-center">
+                    <div className="flex flex-col gap-5">
+                        <Skeleton className="w-24 h-24 rounded-full self-center" />
+                        <Skeleton className="h-6 w-32" />
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    )
+}
 
 export const NextGame: FC = async () => {
     const [{ schedule: nextGame }, { team }] = await Promise.all([
