@@ -39,6 +39,14 @@ export const Navbar: FC = () => {
             >
                 Roster
             </Link>
+            <Link
+                href="/leaders"
+                className={cn('text-l hover:text-white text-slate-300', {
+                    'text-white': pathname === '/leaders',
+                })}
+            >
+                Leaders
+            </Link>
         </div>
     )
 }
