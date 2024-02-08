@@ -55,7 +55,9 @@ const RosterItem: FC<RosterItemProps> = async ({ player }) => {
     try {
         average = (await serverClient.getSeasonAverage({ id: player.id }))
             .seasonAverage
-    } catch {}
+    } catch {
+        // ignore
+    }
 
     return (
         <TableRow>

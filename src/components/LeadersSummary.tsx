@@ -7,10 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import { Separator } from './ui/separator'
 
-type Leader = 'pts' | 'reb' | 'ast' | 'stl' | 'blk' | 'fg_pct'
+type LeaderType = 'pts' | 'reb' | 'ast' | 'stl' | 'blk' | 'fg_pct'
 
 interface LeaderProps {
-    leader: Leader
+    leader: LeaderType
 }
 
 const Leader: FC<LeaderProps> = async ({ leader }) => {
@@ -42,8 +42,8 @@ const Leader: FC<LeaderProps> = async ({ leader }) => {
 }
 
 export const LeadersSummary: FC = () => {
-    const offense: Leader[] = ['pts', 'ast', 'fg_pct']
-    const defense: Leader[] = ['reb', 'stl', 'blk']
+    const offense: LeaderType[] = ['pts', 'ast', 'fg_pct']
+    const defense: LeaderType[] = ['reb', 'stl', 'blk']
 
     return (
         <Card>
