@@ -1,5 +1,5 @@
 import 'server-only'
-import { FC } from 'react'
+import { FC, Suspense } from 'react'
 import { serverClient } from '@/app/_trpc/serverClient'
 import {
     Table,
@@ -13,6 +13,7 @@ import {
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import Image from 'next/image'
+import { Skeleton } from './ui/skeleton'
 
 interface ScheduleItemProps {
     game: {
@@ -28,6 +29,23 @@ interface ScheduleItemProps {
         home_score: number
     }
 }
+
+const ScheduleItemSkeleton: FC = () => (
+    <TableRow>
+        <TableCell>
+            <Skeleton className="h-5 w-20" />
+        </TableCell>
+        <TableCell>
+            <div className="flex flex-row gap-2 items-center">
+                <Skeleton className="rounded-full h-6 w-6" />
+                <Skeleton className="h-5 w-40" />
+            </div>
+        </TableCell>
+        <TableCell>
+            <Skeleton className="h-5 w-20" />
+        </TableCell>
+    </TableRow>
+)
 
 const ScheduleItem: FC<ScheduleItemProps> = ({ game }) => (
     <TableRow>
@@ -74,9 +92,27 @@ const ScheduleItem: FC<ScheduleItemProps> = ({ game }) => (
     </TableRow>
 )
 
-export const Schedule: FC = async () => {
+const ScheduleBodySkeleton: FC = () => (
+    <>
+        {new Array(82).fill(null).map((_, i) => (
+            <ScheduleItemSkeleton key={`schedule-skeleton-${i.toString()}`} />
+        ))}
+    </>
+)
+
+const ScheduleBody: FC = async () => {
     const { schedule } = await serverClient.getSchedule({})
 
+    return (
+        <>
+            {schedule.map(game => (
+                <ScheduleItem key={game.id} game={game} />
+            ))}
+        </>
+    )
+}
+
+export const Schedule: FC = async () => {
     return (
         <Table>
             <TableCaption>Denver Nuggets Schedule</TableCaption>
@@ -88,9 +124,9 @@ export const Schedule: FC = async () => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {schedule.map(game => (
-                    <ScheduleItem key={game.id} game={game} />
-                ))}
+                <Suspense fallback={<ScheduleBodySkeleton />}>
+                    <ScheduleBody />
+                </Suspense>
             </TableBody>
         </Table>
     )

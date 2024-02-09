@@ -93,6 +93,31 @@ const RosterItem: FC<RosterItemProps> = async ({ player }) => {
     )
 }
 
+export const RosterSkeleton: FC = () => {
+    return (
+        <Table>
+            <TableCaption>Denver Nuggets Roster</TableCaption>
+            <TableHeader>
+                <TableRow>
+                    <TableHead />
+                    <TableHead>Name</TableHead>
+                    <TableHead>Position</TableHead>
+                    <TableHead className="hidden xs:table-cell">PPG</TableHead>
+                    <TableHead className="hidden xs:table-cell">RPG</TableHead>
+                    <TableHead className="hidden xs:table-cell">APG</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {new Array(15).fill(null).map((_, i) => (
+                    <RosterItemSkeleton
+                        key={`roster-skeleton-${i.toString()}`}
+                    />
+                ))}
+            </TableBody>
+        </Table>
+    )
+}
+
 export const Roster: FC = async () => {
     const { roster } = await serverClient.getRoster()
 

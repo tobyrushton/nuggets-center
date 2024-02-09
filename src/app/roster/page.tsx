@@ -1,7 +1,7 @@
 import 'server-only'
-import { FC } from 'react'
+import { FC, Suspense } from 'react'
 import { getCurrentSeason } from '@/lib/getCurrentSeason'
-import { Roster } from '@/components/Roster'
+import { Roster, RosterSkeleton } from '@/components/Roster'
 
 const RosterPage: FC = () => {
     return (
@@ -10,7 +10,9 @@ const RosterPage: FC = () => {
                 <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl text-white p-2">
                     Denver Nuggets Roster {getCurrentSeason()}
                 </h1>
-                <Roster />
+                <Suspense fallback={<RosterSkeleton />}>
+                    <Roster />
+                </Suspense>
             </div>
         </main>
     )
