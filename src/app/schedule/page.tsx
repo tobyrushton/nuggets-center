@@ -10,7 +10,7 @@ const SchedulePage: FC = () => {
                     Denver Nuggets Schedule
                 </h1>
                 <div className="sm:w-3/5">
-                    <Schedule />
+                    <Schedule caption="Denver Nuggets Schedule" />
                 </div>
             </div>
         </main>

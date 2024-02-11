@@ -30,6 +30,13 @@ interface ScheduleItemProps {
     }
 }
 
+interface ScheduleProps {
+    caption: string
+    opponentId?: string
+}
+
+type ScheduleBodyProps = Omit<ScheduleProps, 'caption'>
+
 const ScheduleItemSkeleton: FC = () => (
     <TableRow>
         <TableCell>
@@ -100,8 +107,8 @@ const ScheduleBodySkeleton: FC = () => (
     </>
 )
 
-const ScheduleBody: FC = async () => {
-    const { schedule } = await serverClient.getSchedule({})
+const ScheduleBody: FC<ScheduleBodyProps> = async ({ opponentId }) => {
+    const { schedule } = await serverClient.getSchedule({ opponentId })
 
     return (
         <>
@@ -112,10 +119,10 @@ const ScheduleBody: FC = async () => {
     )
 }
 
-export const Schedule: FC = async () => {
+export const Schedule: FC<ScheduleProps> = async ({ caption, opponentId }) => {
     return (
         <Table>
-            <TableCaption>Denver Nuggets Schedule</TableCaption>
+            <TableCaption>{caption}</TableCaption>
             <TableHeader>
                 <TableRow>
                     <TableHead>Date</TableHead>
@@ -125,7 +132,7 @@ export const Schedule: FC = async () => {
             </TableHeader>
             <TableBody>
                 <Suspense fallback={<ScheduleBodySkeleton />}>
-                    <ScheduleBody />
+                    <ScheduleBody opponentId={opponentId} />
                 </Suspense>
             </TableBody>
         </Table>

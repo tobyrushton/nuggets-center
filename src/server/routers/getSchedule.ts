@@ -5,6 +5,8 @@ import { publicProcedure } from '../trpc'
  * Retrieves the schedule of games.
  * @param {Object} input - The input parameters.
  * @param {number} input.take - The number of games to retrieve (optional).
+ * @param {string} input.method - The method to retrieve games (optional).
+ * @param {string} input.opponentId - The ID of the opponent to retrieve games for (optional).
  * @returns {Object} - The schedule of games.
  * @returns {Array} schedule - An array of game objects.
  * @returns {string} schedule.id - The ID of the game.
@@ -21,6 +23,7 @@ export const getSchedule = publicProcedure
         z.object({
             take: z.number().optional(),
             method: z.enum(['next', 'last', 'all']).optional(),
+            opponentId: z.string().optional(),
         })
     )
     .output(
@@ -61,7 +64,9 @@ export const getSchedule = publicProcedure
                           opponent_score:
                               input.method === 'next' ? -1 : { not: -1 },
                       }
-                    : undefined,
+                    : input.opponentId
+                      ? { opponent_id: input.opponentId }
+                      : undefined,
         })
 
         return {
