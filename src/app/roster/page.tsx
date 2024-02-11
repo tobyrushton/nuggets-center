@@ -10,9 +10,11 @@ const RosterPage: FC = () => {
                 <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl text-white p-2">
                     Denver Nuggets Roster {getCurrentSeason()}
                 </h1>
-                <Suspense fallback={<RosterSkeleton />}>
-                    <Roster />
-                </Suspense>
+                <div className="sm:w-3/5">
+                    <Suspense fallback={<RosterSkeleton />}>
+                        <Roster />
+                    </Suspense>
+                </div>
             </div>
         </main>
     )

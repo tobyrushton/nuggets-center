@@ -9,7 +9,9 @@ const SchedulePage: FC = () => {
                 <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl text-white p-2">
                     Denver Nuggets Schedule
                 </h1>
-                <Schedule />
+                <div className="sm:w-3/5">
+                    <Schedule />
+                </div>
             </div>
         </main>
     )
