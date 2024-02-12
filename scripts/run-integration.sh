@@ -5,5 +5,5 @@ source $DIR/setenv.sh
 docker-compose up -d
 echo '🟡 - Waiting for database to be ready...'
 $DIR/wait-for-it.sh "${DATABASE_URL}" -- echo '🟢 - Database is ready!'
-npx prisma db push
+npx prisma db migrate --init
 vitest -c ./vitest.config.integration.ts
