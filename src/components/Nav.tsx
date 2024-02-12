@@ -11,7 +11,7 @@ export const Navbar: FC = () => {
     const pathname = usePathname()
 
     return (
-        <div className="bg-powder-blue w-screen h-15 shadow-xl flex flex-row py-2 px-5 gap-5 items-center">
+        <div className="bg-powder-blue w-screen h-16 shadow-xl flex flex-row py-2 px-5 gap-5 items-center">
             <Link href="/">
                 <Image src={Logo} alt="nuggets logo" width={85} height={60} />
             </Link>

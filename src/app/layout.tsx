@@ -20,7 +20,9 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
             <body className={GeistSans.className}>
                 <TRPCProvider>
                     <Navbar />
-                    {children}
+                    <main className="absolute w-full h-[calc(100%-4rem)] bg-black overflow-y-auto text-white">
+                        {children}
+                    </main>
                 </TRPCProvider>
             </body>
         </html>
