@@ -30,10 +30,17 @@ export const getRecord = publicProcedure
         })
 
         const record: IRecord = teamsWithScores.reduce<IRecord>(
-            (acc, game) =>
-                game.home_score > game.opponent_score
-                    ? { ...acc, wins: acc.wins + 1 }
-                    : { ...acc, losses: acc.losses + 1 },
+            (acc, game) => ({
+                wins: game.home
+                    ? acc.wins + (game.home_score > game.opponent_score ? 1 : 0)
+                    : acc.wins +
+                      (game.opponent_score > game.home_score ? 1 : 0),
+                losses: game.home
+                    ? acc.losses +
+                      (game.home_score < game.opponent_score ? 1 : 0)
+                    : acc.losses +
+                      (game.opponent_score < game.home_score ? 1 : 0),
+            }),
             { wins: 0, losses: 0 }
         )
 

@@ -23,8 +23,9 @@ export const getGame = publicProcedure
                     name: z.string(),
                     logo_url: z.string(),
                 }),
-                opponent_score: z.number().optional(),
-                home_score: z.number().optional(),
+                home: z.boolean(),
+                opponent_score: z.number(),
+                home_score: z.number(),
             }),
         })
     )
@@ -39,6 +40,7 @@ export const getGame = publicProcedure
                 opponent: true,
                 opponent_score: true,
                 home_score: true,
+                home: true,
             },
         })
 

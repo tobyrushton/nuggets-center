@@ -15,6 +15,7 @@ export const getGameStats = publicProcedure
                     id: z.string(),
                     player_id: z.string(),
                     game_id: z.string(),
+                    date: z.date(),
                     pts: z.number(),
                     ast: z.number(),
                     min: z.string(),
@@ -50,6 +51,12 @@ export const getGameStats = publicProcedure
             },
             include: {
                 player: true,
+                game: true,
+            },
+            orderBy: {
+                game: {
+                    date: 'desc',
+                },
             },
         })
 
@@ -62,6 +69,7 @@ export const getGameStats = publicProcedure
                     last_name: stat.player.last_name,
                     profile_url: stat.player.profile_url,
                 },
+                date: new Date(stat.game.date),
             })),
         }
     })

@@ -5,6 +5,8 @@ import { publicProcedure } from '../trpc'
  * Retrieves the schedule of games.
  * @param {Object} input - The input parameters.
  * @param {number} input.take - The number of games to retrieve (optional).
+ * @param {string} input.method - The method to retrieve games (optional).
+ * @param {string} input.opponentId - The ID of the opponent to retrieve games for (optional).
  * @returns {Object} - The schedule of games.
  * @returns {Array} schedule - An array of game objects.
  * @returns {string} schedule.id - The ID of the game.
@@ -18,11 +20,11 @@ import { publicProcedure } from '../trpc'
  */
 export const getSchedule = publicProcedure
     .input(
-        z
-            .object({
-                take: z.number(),
-            })
-            .optional()
+        z.object({
+            take: z.number().optional(),
+            method: z.enum(['next', 'last', 'all']).optional(),
+            opponentId: z.string().optional(),
+        })
     )
     .output(
         z.object({
@@ -30,13 +32,14 @@ export const getSchedule = publicProcedure
                 z.object({
                     id: z.string(),
                     date: z.date(),
+                    home: z.boolean(),
                     opponent: z.object({
                         id: z.string(),
                         name: z.string(),
                         logo_url: z.string(),
                     }),
-                    opponent_score: z.number().optional(),
-                    home_score: z.number().optional(),
+                    opponent_score: z.number(),
+                    home_score: z.number(),
                 })
             ),
         })
@@ -47,6 +50,23 @@ export const getSchedule = publicProcedure
             include: {
                 opponent: true,
             },
+            orderBy:
+                input.method && input.method !== 'all'
+                    ? {
+                          date: input.method === 'next' ? 'asc' : 'desc',
+                      }
+                    : { date: 'asc' },
+            where:
+                input.method && input.method !== 'all'
+                    ? {
+                          home_score:
+                              input.method === 'next' ? -1 : { not: -1 },
+                          opponent_score:
+                              input.method === 'next' ? -1 : { not: -1 },
+                      }
+                    : input.opponentId
+                      ? { opponent_id: input.opponentId }
+                      : undefined,
         })
 
         return {

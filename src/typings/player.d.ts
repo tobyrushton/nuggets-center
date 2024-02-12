@@ -39,7 +39,7 @@ namespace player {
 
     interface IGameStats {
         game_id: string
-        player_id: number
+        player_id: string
         pts: number
         reb: number
         ast: number
@@ -54,8 +54,6 @@ namespace player {
         ftm: number
         fta: number
         pf: number
-        oreb: number
-        dreb: number
         fg_pct: number
         fg3_pct: number
         ft_pct: number

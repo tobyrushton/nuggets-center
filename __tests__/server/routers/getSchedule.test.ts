@@ -26,12 +26,15 @@ describe('api/getSchedule', () => {
     it('should return the schedule', async () => {
         prismaMock.game.findMany.mockResolvedValueOnce(mockSchedule)
 
-        const { schedule } = await serverClient.getSchedule()
+        const { schedule } = await serverClient.getSchedule({})
 
         expect(prismaMock.game.findMany).toHaveBeenCalledWith({
             include: {
                 opponent: true,
             },
+            orderBy: {
+                date: 'asc'
+            }
         })
 
         expect(schedule).toHaveLength(80)
@@ -44,6 +47,63 @@ describe('api/getSchedule', () => {
 
         expect(prismaMock.game.findMany).toHaveBeenCalledWith({
             take: 5,
+            include: {
+                opponent: true,
+            },
+            orderBy: {
+                date: 'asc'
+            }
+        })
+
+        expect(schedule).toHaveLength(5)
+    })
+
+    it('should return the schedule with a limit and method type next', async () => {
+        prismaMock.game.findMany.mockResolvedValueOnce(mockSchedule.slice(0, 5))
+
+        const { schedule } = await serverClient.getSchedule({
+            take: 5,
+            method: 'next',
+        })
+
+        expect(prismaMock.game.findMany).toHaveBeenCalledWith({
+            take: 5,
+            orderBy: {
+                date: 'asc',
+            },
+            where: {
+                home_score: -1,
+                opponent_score: -1,
+            },
+            include: {
+                opponent: true,
+            },
+        })
+
+        expect(schedule).toHaveLength(5)
+    })
+
+    it('should return the schedule with a limit and method type last', async () => {
+        prismaMock.game.findMany.mockResolvedValueOnce(mockSchedule.slice(0, 5))
+
+        const { schedule } = await serverClient.getSchedule({
+            take: 5,
+            method: 'last',
+        })
+
+        expect(prismaMock.game.findMany).toHaveBeenCalledWith({
+            take: 5,
+            orderBy: {
+                date: 'desc',
+            },
+            where: {
+                home_score: {
+                    not: -1,
+                },
+                opponent_score: {
+                    not: -1,
+                },
+            },
             include: {
                 opponent: true,
             },
