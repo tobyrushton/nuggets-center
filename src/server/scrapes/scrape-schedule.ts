@@ -28,7 +28,7 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
         const content = row.querySelectorAll('td')
 
         // dont want to scrape the header rows
-        if (content[0].textContent === 'DATE') return
+        if (content[0].textContent === 'DATE' || content.length === 1) return
 
         // data that is the same for bothy completed and uncompleted games
         const dateString = content[0].textContent as string
