@@ -6,6 +6,7 @@ on:
 
 env:
     DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+    DIRECT_URL: postgres://postgres:postgres@localhost:5432/quotes
 jobs:
     unit-tests:
         runs-on: ubuntu-latest
