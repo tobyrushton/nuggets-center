@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { getCurrentSeason } from '@/lib/getCurrentSeason'
 
-
 describe('getCurrentSeason', () => {
     it('should return the correct season when its the year behind', () => {
         vi.useFakeTimers().setSystemTime(new Date('2023-10-10'))

@@ -48,6 +48,11 @@ describe('scrapeGameStats', () => {
             expect(typeof game.blk).toBe('number')
             expect(typeof game.turnover).toBe('number')
             expect(typeof game.min).toBe('string')
+
+            // validate
+            expect(game.fga).toBeGreaterThanOrEqual(game.fgm)
+            expect(game.fg3a).toBeGreaterThanOrEqual(game.fg3m)
+            expect(game.fta).toBeGreaterThanOrEqual(game.ftm)
         })
     })
 })
