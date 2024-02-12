@@ -7,6 +7,10 @@ import {
     categories,
 } from '@/components/LeaderCard'
 
+// has to be dynamic else prerender error
+export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
+
 const LeadersPage: FC = () => {
     return (
         <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-5 p-5">

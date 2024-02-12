@@ -12,6 +12,10 @@ import {
 import { Record, RecordSkeleton } from '@/components/Record'
 import { LeadersSummary } from '@/components/LeadersSummary'
 
+// has to be dynamic else prerender error
+export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
+
 const Home = (): ReactNode => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2">
