@@ -13,6 +13,10 @@ const mockGameStats = Array.from({ length: 10 }, () => ({
         ...generatePlayer(),
         id: faker.string.uuid(),
     },
+    game: {
+        id: faker.string.uuid(),
+        date: faker.date.recent(),
+    },
 }))
 
 describe('api/getGameStats', () => {
@@ -29,7 +33,13 @@ describe('api/getGameStats', () => {
             },
             include: {
                 player: true,
+                game: true,
             },
+            orderBy: {
+                game: {
+                    date: 'desc',
+                }
+            }
         })
 
         expect(stats).toHaveLength(mockGameStats.length)
@@ -48,7 +58,13 @@ describe('api/getGameStats', () => {
             },
             include: {
                 player: true,
+                game: true,
             },
+            orderBy: {
+                game: {
+                    date: 'desc',
+                }
+            }
         })
 
         expect(stats).toHaveLength(mockGameStats.length)

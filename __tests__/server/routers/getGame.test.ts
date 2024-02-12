@@ -23,6 +23,7 @@ describe('api/getGame', () => {
             },
             opponent_score: mockGame.opponent_score,
             home_score: mockGame.home_score,
+            home: true,
         } as any)
 
         const game = await serverClient.getGame({ id: '1' })
@@ -37,6 +38,7 @@ describe('api/getGame', () => {
                 opponent: true,
                 opponent_score: true,
                 home_score: true,
+                home: true,
             },
         })
         expect(game).toEqual({
@@ -50,6 +52,7 @@ describe('api/getGame', () => {
                 },
                 opponent_score: mockGame.opponent_score,
                 home_score: mockGame.home_score,
+                home: true,
             },
         })
     })

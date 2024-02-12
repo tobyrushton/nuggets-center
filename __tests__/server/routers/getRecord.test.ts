@@ -19,7 +19,14 @@ describe('api/getRecord', () => {
                 id: faker.string.uuid(),
                 opponent_id: faker.string.uuid(),
             }))
-        ) as any
+        ) as any[]
+
+        const equalScores = mockGames.reduce((acc, curr) => {
+            if (curr.home_score === curr.opponent_score) {
+                return acc + 1
+            }
+            return acc
+        }, 0)
 
         prismaMock.game.findMany.mockResolvedValueOnce(mockGames)
 
@@ -36,7 +43,7 @@ describe('api/getRecord', () => {
             },
         })
 
-        expect(record.wins + record.losses).toBe(80)
+        expect(record.wins + record.losses).toBe(80 - equalScores)
     })
 
     it('should return empty record if no games have been played', async () => {
@@ -65,16 +72,19 @@ describe('api/getRecord', () => {
                 ...generateGameWithScore(mockTeamNames),
                 home_score: 100,
                 opponent_score: 99,
+                home: true,
             },
             {
                 ...generateGameWithScore(mockTeamNames),
                 home_score: 100,
                 opponent_score: 99,
+                home: true,
             },
             {
                 ...generateGameWithScore(mockTeamNames),
                 home_score: 99,
                 opponent_score: 100,
+                home: true,
             },
         ] as any)
 
