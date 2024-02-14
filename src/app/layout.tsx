@@ -8,7 +8,7 @@ import './globals.css'
 export const metadata: Metadata = {
     title: 'Nuggets Center',
     description: 'All about the Denver Nuggets!',
-    metadataBase: new URL(process.env.NEXT_PUBLIC_VERCEL_URL),
+    metadataBase: new URL('https://nuggetscenter.xyz'),
 }
 
 export const viewport: Viewport = {
