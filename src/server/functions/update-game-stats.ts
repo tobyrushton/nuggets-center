@@ -1,5 +1,6 @@
 import { getDateOfGame } from '@/lib/getDateOfGame'
 import { getCurrentSeason } from '@/lib/getCurrentSeason'
+import dayjs from 'dayjs'
 import prisma from '../db/client'
 import { scrapeGameStats, getLogLinks } from '../scrapes/scrape-game-stats'
 
@@ -9,6 +10,15 @@ const getPlayerName = (rawName: string): string => {
     return name
 }
 
+const sameDay = (d1: string, d2: string): boolean => {
+    if (d1.split('T')[0] === d2.split('T')[0]) return true
+    // espn shows dates according to uk time,
+    // so we need to check if the dates are within 16 hours of each other
+    const date1 = dayjs(d1)
+    const diff = date1.diff(d2, 'h')
+    return Math.abs(diff) <= 16
+}
+
 /**
  * @description Update the game stats for all players
  */
@@ -16,7 +26,11 @@ export const updateGameStats = async (): Promise<void> => {
     const [links, players, games] = await Promise.all([
         getLogLinks(),
         prisma.player.findMany(),
-        prisma.game.findMany(),
+        prisma.game.findMany({
+            orderBy: {
+                date: 'asc',
+            },
+        }),
     ])
 
     await Promise.all(
@@ -47,7 +61,7 @@ export const updateGameStats = async (): Promise<void> => {
 
             const gamesWithIds = gameStats.map(gameStat => {
                 const dateISO = getDateOfGame(gameStat.date).toISOString()
-                const game = games.find(gme => gme.date === dateISO)
+                const game = games.find(gme => sameDay(gme.date, dateISO))
 
                 if (!game)
                     throw new Error(
