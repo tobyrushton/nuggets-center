@@ -3,6 +3,8 @@ import { FC, Suspense } from 'react'
 import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import { Roster, RosterSkeleton } from '@/components/Roster'
 
+export const revalidate = 60 * 60 * 12 // every 12 hour
+
 const RosterPage: FC = () => {
     return (
         <div className="flex flex-col p-5 items-center">

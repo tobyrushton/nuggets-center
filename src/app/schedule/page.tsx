@@ -2,6 +2,8 @@ import 'server-only'
 import { FC } from 'react'
 import { Schedule } from '@/components/Schedule'
 
+export const revalidate = 60 * 60 * 12 // every 12 hour
+
 const SchedulePage: FC = () => {
     return (
         <div className="flex flex-col items-center">
