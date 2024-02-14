@@ -5,7 +5,7 @@
             "schedule": "0 0 * * *"
         },
         {
-            "path": "/api/cron/daily-db-scrape",
+            "path": "/api/cron/weekly-db-scrape",
             "schedule": "0 0 * * 0"
         }
     ]
