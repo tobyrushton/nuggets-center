@@ -22,9 +22,9 @@ describe('updateSchedule', () => {
 
     it('should update the schedule in the database if there are new games', async () => {
         const mockSchedule = [
-            { date: '01/01', opponent_name: 'Team A', home: true },
-            { date: '01/02', opponent_name: 'Team B', home: false },
-            { date: '01/03', opponent_name: 'Team B', home: true },
+            { date: new Date('01/01/24').toISOString(), opponent_name: 'Team A', home: true, opponent_score: -1, home_score: -1 },
+            { date: new Date('01/02/24').toISOString(), opponent_name: 'Team B', home: false, opponent_score: -1, home_score: -1 },
+            { date: new Date('01/03/24').toISOString(), opponent_name: 'Team B', home: true, opponent_score: -1, home_score: -1 },
         ]
         const mockScheduleInDb = [
             {
@@ -74,14 +74,14 @@ describe('updateSchedule', () => {
     it('should not update the schedule in the database if there are no new games', async () => {
         const mockSchedule = [
             {
-                date: '01/01',
+                date: new Date('2024-01-01').toISOString(),
                 opponent_name: 'Team A',
                 home: true,
                 opponent_score: 101,
                 home_score: 123,
             },
             {
-                date: '01/01',
+                date: new Date('2024-01-02').toISOString(),
                 opponent_name: 'Team B',
                 home: false,
                 opponent_score: 120,
@@ -96,7 +96,6 @@ describe('updateSchedule', () => {
                     id: index.toString(),
                     opponent_id: index.toString(),
                     ...rest,
-                    date: getDateOfGame(game.date).toISOString(),
                 }
             }),
         ]
@@ -118,14 +117,14 @@ describe('updateSchedule', () => {
     it('should update game if changed', async () => {
         const mockSchedule = [
             {
-                date: '01/01',
+                date: new Date('01/01/24').toISOString(),
                 opponent_name: 'Team A',
                 home: true,
                 opponent_score: 101,
                 home_score: 123,
             },
             {
-                date: '01/02',
+                date: new Date('01/02/24').toISOString(),
                 opponent_name: 'Team B',
                 home: false,
                 opponent_score: 120,
@@ -138,7 +137,7 @@ describe('updateSchedule', () => {
                 return {
                     id: index.toString(),
                     opponent_id: index.toString(),
-                    date: getDateOfGame(game.date).toISOString(),
+                    date: game.date,
                     home_score: -1,
                     opponent_score: -1,
                     home: game.home,
@@ -162,10 +161,7 @@ describe('updateSchedule', () => {
             const { opponent_name: _, ...rest } = game
             expect(prismaMock.game.update).toHaveBeenCalledWith({
                 where: { id: index.toString() },
-                data: {
-                    ...rest,
-                    date: getDateOfGame(game.date).toISOString(),
-                },
+                data: rest,
             })
         })
     })
