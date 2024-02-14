@@ -7,7 +7,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
     title: 'Nuggets Center',
-    description: 'All obout the nuggets!',
+    description: 'All about the Denver Nuggets!',
 }
 
 export const viewport: Viewport = {
