@@ -1,5 +1,11 @@
 import jsdom from 'jsdom'
 import { getCurrentSeason } from '@/lib/getCurrentSeason'
+import dayjs from 'dayjs'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const { JSDOM } = jsdom
 
@@ -57,7 +63,9 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
             const rawTimeString = content[2].textContent as string
             const formattedTimeString = rawTimeString.replace('p', ' PM')
             const time = convertTime12to24(formattedTimeString)
-            const date = new Date(`${dateString} ${time}`).toISOString()
+            const date = dayjs
+                .tz(`${dateString} ${time}`, 'America/New_York')
+                .toISOString()
 
             const home = content[5].textContent !== '@'
 

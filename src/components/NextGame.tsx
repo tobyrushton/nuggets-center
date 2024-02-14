@@ -5,8 +5,8 @@ import { serverClient } from '@/app/_trpc/serverClient'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Image from 'next/image'
 import Link from 'next/link'
-import dayjs from 'dayjs'
 import { Skeleton } from './ui/skeleton'
+import { NextGameTime } from './NextGameTime'
 
 export const NextGameSkeleton: FC = () => {
     return (
@@ -47,7 +47,9 @@ export const NextGame: FC = async () => {
         <Card className="h-min">
             <CardHeader>
                 <CardTitle>
-                    {dayjs(nextGame[0].date).format('dddd MMM D [at] h A')}
+                    <NextGameTime
+                        nextGameTime={nextGame[0].date.toISOString()}
+                    />
                 </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-row">
