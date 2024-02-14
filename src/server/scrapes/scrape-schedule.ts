@@ -1,4 +1,11 @@
 import jsdom from 'jsdom'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
+import dayjs from 'dayjs'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const { JSDOM } = jsdom
 
@@ -6,9 +13,26 @@ export interface IScheduleScrape {
     date: string
     home: boolean
     opponent_name: string
-    // not all games have happened yet
-    opponent_score?: number
-    home_score?: number
+    opponent_score: number
+    home_score: number
+}
+
+const convertTime12to24 = (time12h: string): string => {
+    const [time, modifier] = time12h.split(' ')
+
+    const [hours, minutes] = time.split(':') as [string, string]
+
+    let newHours = hours
+
+    if (hours === '12') {
+        newHours = '00'
+    }
+
+    if (modifier === 'PM') {
+        newHours = String(parseInt(hours, 10) + 12)
+    }
+
+    return `${newHours}:${minutes}`
 }
 
 /**
@@ -17,62 +41,55 @@ export interface IScheduleScrape {
  */
 export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
     const res = await fetch(
-        'https://www.espn.co.uk/nba/team/schedule/_/name/den/denver-nuggets'
+        `https://www.basketball-reference.com/teams/DEN/${getCurrentSeason()}_games.html`
     )
     const dom = new JSDOM(await res.text())
-    const rows = dom.window.document.querySelectorAll('.Table__TR')
+    const rows = dom.window.document.getElementsByTagName('tr')
 
     const schedule: IScheduleScrape[] = []
 
-    rows.forEach(row => {
-        const content = row.querySelectorAll('td')
+    for (let i = 0; i < rows.length; i++) {
+        const content = rows[i].children
 
         // dont want to scrape the header rows
-        if (content[0].textContent === 'DATE' || content.length === 1) return
+        if (
+            !(
+                content[0]?.className === 'thead' ||
+                content[0].textContent === 'G'
+            )
+        ) {
+            // data that is the same for bothy completed and uncompleted games
+            const dateString = content[1].children[0].textContent as string
+            const rawTimeString = content[2].textContent as string
+            const formattedTimeString = rawTimeString.replace('p', ' PM')
+            const time = convertTime12to24(formattedTimeString)
+            const date = dayjs
+                .tz(`${dateString} ${time}`, 'America/New_York')
+                .toISOString()
 
-        // data that is the same for bothy completed and uncompleted games
-        const dateString = content[0].textContent as string
-        const date = dateString.slice(dateString.indexOf(' ') + 1)
-        const opponent = content[1].textContent as string
-        const [_, opponentName] = opponent.split(' ')
-        const home = !opponent.includes('@')
+            const home = content[5].textContent !== '@'
 
-        // if game completed -> in the past
-        if (content.length === 7) {
-            const score = content[2].textContent as string
-            const win = score.includes('W')
-            const [winnersScore, losersScore] = score
-                .slice(1, score.length - 1)
-                .split('-')
+            const opponentName = content[6].children[0].textContent as string
+
+            const teamScoreRaw = parseInt(content[9].textContent as string, 10)
+            const opponentScoreRaw = parseInt(
+                content[10].textContent as string,
+                10
+            )
+            const teamScore = Number.isNaN(teamScoreRaw) ? -1 : teamScoreRaw
+            const opponentScore = Number.isNaN(opponentScoreRaw)
+                ? -1
+                : opponentScoreRaw
+
             schedule.push({
                 date,
                 home,
                 opponent_name: opponentName,
-                opponent_score: home
-                    ? win
-                        ? parseInt(losersScore, 10)
-                        : parseInt(winnersScore, 10)
-                    : win
-                      ? parseInt(winnersScore, 10)
-                      : parseInt(losersScore, 10),
-                home_score: home
-                    ? win
-                        ? parseInt(winnersScore, 10)
-                        : parseInt(losersScore, 10)
-                    : win
-                      ? parseInt(losersScore, 10)
-                      : parseInt(winnersScore, 10),
-            })
-        } // if game not completed -> in the future
-        else if (content.length === 5) {
-            // const time = content[2].textContent as string
-            schedule.push({
-                date,
-                home,
-                opponent_name: opponentName,
+                opponent_score: home ? opponentScore : teamScore,
+                home_score: home ? teamScore : opponentScore,
             })
         }
-    })
+    }
 
     return schedule
 }

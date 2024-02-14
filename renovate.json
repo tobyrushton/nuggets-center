@@ -9,6 +9,10 @@
           "enabled": false
       },
       "packageRules": [
+        {
+          "matchPackageNames": ["@tanstack/react-query"],
+          "enabled": false
+        },
           {
               "groupName": "all dependencies",
               "groupSlug": "all",

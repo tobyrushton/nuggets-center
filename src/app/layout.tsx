@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { FC, ReactNode } from 'react'
 import { GeistSans } from 'geist/font/sans'
 import { TRPCProvider } from '@/components/providers/TRPCProvider'
@@ -7,7 +7,11 @@ import './globals.css'
 
 export const metadata: Metadata = {
     title: 'Nuggets Center',
-    description: 'All obout the nuggets!',
+    description: 'All about the Denver Nuggets!',
+}
+
+export const viewport: Viewport = {
+    themeColor: '#418fde',
 }
 
 interface RootLayoutProps {
@@ -20,7 +24,7 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
             <body className={GeistSans.className}>
                 <TRPCProvider>
                     <Navbar />
-                    <main className="absolute w-full h-[calc(100%-4rem)] bg-black overflow-y-auto text-white">
+                    <main className="absolute w-full h-[calc(100%-4rem)] bg-white dark:bg-black overflow-y-auto text-black dark:text-white">
                         {children}
                     </main>
                 </TRPCProvider>
