@@ -11,7 +11,7 @@ import Image from 'next/image'
 import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import { serverClient } from '../../_trpc/serverClient'
 
-interface PlayerPageProps {
+export interface PlayerPageProps {
     params: {
         id: string
     }
