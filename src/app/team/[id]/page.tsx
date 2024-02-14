@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { serverClient } from '@/app/_trpc/serverClient'
 import { Schedule } from '@/components/Schedule'
 
-interface TeamPageProps {
+export interface TeamPageProps {
     params: {
         id: string
     }

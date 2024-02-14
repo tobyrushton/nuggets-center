@@ -16,7 +16,7 @@ import {
 import { BoxScore, BoxScoreSkeleton } from '@/components/BoxScore'
 import dayjs from 'dayjs'
 
-interface GamePageProps {
+export interface GamePageProps {
     params: {
         id: string
     }
