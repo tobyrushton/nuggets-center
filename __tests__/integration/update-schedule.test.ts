@@ -17,11 +17,13 @@ describe('updateSchedule', () => {
         const count = await prisma.game.count()
         // due to in season tournament, games will start at 80 and more added
         expect(count).toBeGreaterThanOrEqual(80)
+        expect(count).toBeLessThanOrEqual(82)
     })
 
     it('should update schedule when some are in db', async () => {
         await updateSchedule()
         const firstCount = await prisma.game.count()
+        expect(firstCount).toBeLessThanOrEqual(82)
 
         const half = round(firstCount / 2, 0)
         const games = await prisma.game.findMany({ take: half })
@@ -41,6 +43,7 @@ describe('updateSchedule', () => {
         const thirdCount = await prisma.game.count()
 
         expect(thirdCount).toBe(firstCount)
+        expect(thirdCount).toBeLessThanOrEqual(82)
     })
 
     it('should update scores of games in db', async () => {
@@ -48,6 +51,8 @@ describe('updateSchedule', () => {
 
         const firstGames = await prisma.game.findMany()
         const firstCount = firstGames.length
+
+        expect(firstCount).toBeLessThanOrEqual(82)
 
         const gamesWithScores = firstGames.filter(
             game => game.home_score !== -1 && game.opponent_score !== -1
@@ -81,6 +86,7 @@ describe('updateSchedule', () => {
             const thirdCount = thirdGames.length
 
             expect(thirdCount).toBe(firstCount)
+            expect(thirdCount).toBeLessThanOrEqual(82)
 
             gamesWithScores.forEach(game => {
                 const updatedGame = thirdGames.find(g => g.id === game.id)
@@ -88,5 +94,17 @@ describe('updateSchedule', () => {
                 expect(updatedGame?.opponent_score).toBe(game.opponent_score)
             })
         }
+    })
+
+    it('should not update schedule when there are no changes', async () => {
+        await updateSchedule()
+
+        const firstCount = await prisma.game.count()
+        expect(firstCount).toBeLessThanOrEqual(82)
+
+        await updateSchedule()
+
+        const secondCount = await prisma.game.count()
+        expect(secondCount).toBe(firstCount)
     })
 })
