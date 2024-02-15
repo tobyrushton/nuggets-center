@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import Logo from '../app/nuggets_logo.png'
+import Logo from '../../public/nuggets_logo.png'
 
 export const Navbar: FC = () => {
     const pathname = usePathname()

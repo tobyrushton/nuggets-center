@@ -66,7 +66,7 @@ const ScheduleItem: FC<ScheduleItemProps> = ({ game }) => (
                     src={game.opponent.logo_url}
                     height={25}
                     width={25}
-                    alt={game.opponent.name}
+                    alt={`${game.opponent.name} Logo`}
                 />
                 {game.home ? 'vs' : '@'} {game.opponent.name}
             </Link>

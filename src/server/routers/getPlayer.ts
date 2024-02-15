@@ -24,6 +24,9 @@ export const getPlayer = publicProcedure
             where: {
                 id: input.id,
             },
+            cacheStrategy: {
+                ttl: 60 * 60,
+            },
         })
 
         return player

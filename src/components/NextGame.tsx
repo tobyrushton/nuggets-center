@@ -60,7 +60,7 @@ export const NextGame: FC = async () => {
                     >
                         <Image
                             src={team.logo_url}
-                            alt={team.name}
+                            alt={`${team.name} logo`}
                             width={100}
                             height={100}
                             className="self-center"
@@ -78,7 +78,7 @@ export const NextGame: FC = async () => {
                     >
                         <Image
                             src={nextGame[0].opponent.logo_url}
-                            alt={nextGame[0].opponent.name}
+                            alt={`${nextGame[0].opponent.name} logo`}
                             width={100}
                             height={100}
                             className="self-center"

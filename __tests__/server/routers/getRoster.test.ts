@@ -15,7 +15,16 @@ describe('api/getRoster', () => {
 
         const { roster } = await serverClient.getRoster()
 
-        expect(prismaMock.player.findMany).toHaveBeenCalled()
+        expect(prismaMock.player.findMany).toHaveBeenCalledWith({
+            select: {
+                id: true,
+                first_name: true,
+                last_name: true,
+                position: true,
+                profile_url: true,
+            },
+            cacheStrategy: { ttl: 60 * 60 },
+        })
 
         expect(roster).toHaveLength(5)
     })

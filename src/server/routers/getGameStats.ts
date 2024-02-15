@@ -58,6 +58,9 @@ export const getGameStats = publicProcedure
                     date: 'desc',
                 },
             },
+            cacheStrategy: {
+                ttl: 60 * 60,
+            },
         })
 
         return {

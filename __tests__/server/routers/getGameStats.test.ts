@@ -38,8 +38,9 @@ describe('api/getGameStats', () => {
             orderBy: {
                 game: {
                     date: 'desc',
-                }
-            }
+                },
+            },
+            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(stats).toHaveLength(mockGameStats.length)
@@ -63,8 +64,9 @@ describe('api/getGameStats', () => {
             orderBy: {
                 game: {
                     date: 'desc',
-                }
-            }
+                },
+            },
+            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(stats).toHaveLength(mockGameStats.length)

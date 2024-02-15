@@ -44,8 +44,11 @@ const Leader: FC<LeaderProps> = async ({ leader }) => {
                 href={`/player/${player.player_id}`}
                 className="flex flex-row gap-2"
             >
-                <Avatar className="w-12 h-12">
-                    <AvatarImage src={player.profile_url} />
+                <Avatar className="w-16 h-12">
+                    <AvatarImage
+                        src={player.profile_url}
+                        alt={`${player.player_name} headshot`}
+                    />
                     <AvatarFallback>
                         <Skeleton className="w-12 h-12 rounded-full" />
                     </AvatarFallback>

@@ -69,7 +69,7 @@ const RosterItem: FC<RosterItemProps> = async ({ player }) => {
                         </AvatarFallback>
                         <AvatarImage
                             src={player.profile_url}
-                            alt={player.first_name}
+                            alt={`${player.first_name} ${player.last_name} headshot`}
                         />
                     </Avatar>
                 </Link>
