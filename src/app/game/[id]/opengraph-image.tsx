@@ -20,8 +20,10 @@ const Image = async ({
 
     return new ImageResponse(
         (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
                 src={game.opponent.logo_url}
+                alt={game.opponent.name}
                 width={size.width}
                 height={size.height}
             />

@@ -18,7 +18,15 @@ const Image = async ({
     const { team } = await serverClient.getTeam({ id })
 
     return new ImageResponse(
-        <img src={team.logo_url} width={size.width} height={size.height} />,
+        (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+                src={team.logo_url}
+                alt={team.name}
+                width={size.width}
+                height={size.height}
+            />
+        ),
         {
             ...size,
         }

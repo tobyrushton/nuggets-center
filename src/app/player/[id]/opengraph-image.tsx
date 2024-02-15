@@ -20,7 +20,15 @@ const Image = async ({
         { id }
     )
     return new ImageResponse(
-        <img src={profile_url} width={size.width} height={size.height} />,
+        (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+                src={profile_url}
+                alt={`${first_name} ${last_name}`}
+                width={size.width}
+                height={size.height}
+            />
+        ),
         {
             ...size,
         }

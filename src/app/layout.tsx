@@ -9,6 +9,16 @@ export const metadata: Metadata = {
     title: 'Nuggets Center',
     description: 'All about the Denver Nuggets!',
     metadataBase: new URL('https://nuggetscenter.xyz'),
+    openGraph: {
+        images: [
+            {
+                url: './nuggets_logo.png',
+                width: 1200,
+                height: 630,
+                alt: 'Nuggets Logo',
+            },
+        ],
+    },
 }
 
 export const viewport: Viewport = {
