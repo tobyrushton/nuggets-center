@@ -2,6 +2,15 @@ import 'server-only'
 import { FC, Suspense } from 'react'
 import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import { Roster, RosterSkeleton } from '@/components/Roster'
+import { Metadata } from 'next'
+
+export const generateMetadata = (): Metadata => {
+    const currentSeason = getCurrentSeason()
+    return {
+        title: `Denver Nuggets Roster ${currentSeason - 1}-${currentSeason}`,
+        description: `Denver Nuggets Roster for the ${currentSeason} season.`,
+    }
+}
 
 export const revalidate = 60 * 60 * 12 // every 12 hour
 

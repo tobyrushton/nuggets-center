@@ -9,11 +9,23 @@ import {
 } from '@/components/SeasonAverages'
 import Image from 'next/image'
 import { getCurrentSeason } from '@/lib/getCurrentSeason'
+import { Metadata } from 'next'
 import { serverClient } from '../../_trpc/serverClient'
 
 export interface PlayerPageProps {
     params: {
         id: string
+    }
+}
+
+export const generateMetadata = async ({
+    params: { id },
+}: PlayerPageProps): Promise<Metadata> => {
+    const player = await serverClient.getPlayer({ id })
+
+    return {
+        title: `${player.first_name} ${player.last_name}`,
+        description: `Player stats for ${player.first_name} ${player.last_name}.`,
     }
 }
 

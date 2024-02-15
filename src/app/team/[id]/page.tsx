@@ -4,10 +4,22 @@ import { Separator } from '@/components/ui/separator'
 import Image from 'next/image'
 import { serverClient } from '@/app/_trpc/serverClient'
 import { Schedule } from '@/components/Schedule'
+import { Metadata } from 'next'
 
 export interface TeamPageProps {
     params: {
         id: string
+    }
+}
+
+export const generateMetadata = async ({
+    params: { id },
+}: TeamPageProps): Promise<Metadata> => {
+    const { team } = await serverClient.getTeam({ id })
+
+    return {
+        title: `${team.name}`,
+        description: `Nuggets game history vs ${team.name}.`,
     }
 }
 

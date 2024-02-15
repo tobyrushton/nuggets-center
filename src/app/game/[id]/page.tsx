@@ -15,10 +15,25 @@ import {
 } from '@/components/ui/table'
 import { BoxScore, BoxScoreSkeleton } from '@/components/BoxScore'
 import dayjs from 'dayjs'
+import { Metadata } from 'next'
 
 export interface GamePageProps {
     params: {
         id: string
+    }
+}
+
+export const generateMetadata = async ({
+    params: { id },
+}: GamePageProps): Promise<Metadata> => {
+    const { game } = await serverClient.getGame({ id })
+
+    return {
+        title:
+            game.home_score !== -1 && game.opponent_score !== -1
+                ? `Denver Nuggets ${game.home ? game.home_score : game.opponent_score} - ${game.home ? game.opponent_score : game.home_score} ${game.opponent.name}`
+                : `${dayjs(game.date).format('MM/DD/YYYY')} vs ${game.opponent.name}`,
+        description: `Nuggets box score vs ${game.opponent.name} on ${dayjs(game.date).format('MM/DD/YYYY')}.`,
     }
 }
 
