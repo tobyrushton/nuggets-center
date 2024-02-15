@@ -33,8 +33,9 @@ describe('api/getSchedule', () => {
                 opponent: true,
             },
             orderBy: {
-                date: 'asc'
-            }
+                date: 'asc',
+            },
+            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(schedule).toHaveLength(80)
@@ -51,8 +52,9 @@ describe('api/getSchedule', () => {
                 opponent: true,
             },
             orderBy: {
-                date: 'asc'
-            }
+                date: 'asc',
+            },
+            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(schedule).toHaveLength(5)
@@ -78,6 +80,7 @@ describe('api/getSchedule', () => {
             include: {
                 opponent: true,
             },
+            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(schedule).toHaveLength(5)
@@ -107,6 +110,7 @@ describe('api/getSchedule', () => {
             include: {
                 opponent: true,
             },
+            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(schedule).toHaveLength(5)

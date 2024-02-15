@@ -3,7 +3,7 @@ import prisma from './prisma'
 import resetDb from './reset-db'
 
 vi.mock('../../src/server/db/client', () => ({
-    default: prisma
+    default: prisma,
 }))
 
 beforeEach(async () => {
