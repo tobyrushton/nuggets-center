@@ -2,7 +2,6 @@ import { describe, it, expect, vi, Mock, beforeEach } from 'vitest'
 import { updateSchedule } from '../../../src/server/functions/update-schedule'
 import { prismaMock } from '../../singleton'
 import { scrapeSchedule } from '../../../src/server/scrapes/scrape-schedule'
-import { getDateOfGame } from '../../../src/lib/getDateOfGame'
 
 vi.mock('../../../src/server/scrapes/scrape-schedule', () => ({
     __esModule: true,
@@ -22,9 +21,27 @@ describe('updateSchedule', () => {
 
     it('should update the schedule in the database if there are new games', async () => {
         const mockSchedule = [
-            { date: new Date('01/01/24').toISOString(), opponent_name: 'Team A', home: true, opponent_score: -1, home_score: -1 },
-            { date: new Date('01/02/24').toISOString(), opponent_name: 'Team B', home: false, opponent_score: -1, home_score: -1 },
-            { date: new Date('01/03/24').toISOString(), opponent_name: 'Team B', home: true, opponent_score: -1, home_score: -1 },
+            {
+                date: new Date('01/01/24').toISOString(),
+                opponent_name: 'Team A',
+                home: true,
+                opponent_score: -1,
+                home_score: -1,
+            },
+            {
+                date: new Date('01/02/24').toISOString(),
+                opponent_name: 'Team B',
+                home: false,
+                opponent_score: -1,
+                home_score: -1,
+            },
+            {
+                date: new Date('01/03/24').toISOString(),
+                opponent_name: 'Team B',
+                home: true,
+                opponent_score: -1,
+                home_score: -1,
+            },
         ]
         const mockScheduleInDb = [
             {

@@ -4,10 +4,22 @@ import { Separator } from '@/components/ui/separator'
 import Image from 'next/image'
 import { serverClient } from '@/app/_trpc/serverClient'
 import { Schedule } from '@/components/Schedule'
+import { Metadata } from 'next'
 
-interface TeamPageProps {
+export interface TeamPageProps {
     params: {
         id: string
+    }
+}
+
+export const generateMetadata = async ({
+    params: { id },
+}: TeamPageProps): Promise<Metadata> => {
+    const { team } = await serverClient.getTeam({ id })
+
+    return {
+        title: `${team.name}`,
+        description: `Nuggets game history vs ${team.name}.`,
     }
 }
 
@@ -19,7 +31,7 @@ const TeamPage: FC<TeamPageProps> = async ({ params: { id } }) => {
             <div className="flex flex-row gap-2 p-3 items-center justify-center sm:justify-start">
                 <Image
                     src={team.logo_url}
-                    alt={team.name}
+                    alt={`${team.name} logo`}
                     width={100}
                     height={100}
                 />

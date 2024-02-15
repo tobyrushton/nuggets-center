@@ -9,11 +9,23 @@ import {
 } from '@/components/SeasonAverages'
 import Image from 'next/image'
 import { getCurrentSeason } from '@/lib/getCurrentSeason'
+import { Metadata } from 'next'
 import { serverClient } from '../../_trpc/serverClient'
 
-interface PlayerPageProps {
+export interface PlayerPageProps {
     params: {
         id: string
+    }
+}
+
+export const generateMetadata = async ({
+    params: { id },
+}: PlayerPageProps): Promise<Metadata> => {
+    const player = await serverClient.getPlayer({ id })
+
+    return {
+        title: `${player.first_name} ${player.last_name}`,
+        description: `Player stats for ${player.first_name} ${player.last_name}.`,
     }
 }
 
@@ -26,7 +38,7 @@ const PlayerPage: FC<PlayerPageProps> = async ({ params: { id } }) => {
                 <div className="flex fex-row gap-2 px-2 min-w-fit">
                     <Image
                         src={player.profile_url}
-                        alt={`${player.first_name} ${player.last_name}`}
+                        alt={`${player.first_name} ${player.last_name} headshot`}
                         width={200}
                         height={200}
                     />

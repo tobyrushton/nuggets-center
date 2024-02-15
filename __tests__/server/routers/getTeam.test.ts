@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { serverClient } from '@/app/_trpc/serverClient'
-import { generateTeam } from '../../helpers/generators'
 import { faker } from '@faker-js/faker'
+import { generateTeam } from '../../helpers/generators'
 import { prismaMock } from '../../singleton'
 
-const mockTeams = Array.from({ length: 10 }, generateTeam).map( team => ({...team, id: faker.string.uuid()}))
+const mockTeams = Array.from({ length: 10 }, generateTeam).map(team => ({
+    ...team,
+    id: faker.string.uuid(),
+}))
 
 describe('getTeam', () => {
     it('should return a team based on the provided ID', async () => {
@@ -22,6 +25,8 @@ describe('getTeam', () => {
     })
 
     it('should throw an error if neither an ID or name is provided', async () => {
-        await expect(serverClient.getTeam({})).rejects.toThrow('You must provide an ID or name to retrieve a team.')
+        await expect(serverClient.getTeam({})).rejects.toThrow(
+            'You must provide an ID or name to retrieve a team.'
+        )
     })
 })

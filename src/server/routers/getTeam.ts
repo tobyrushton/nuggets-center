@@ -32,6 +32,9 @@ export const getTeam = publicProcedure
                 where: {
                     id: input.id,
                 },
+                cacheStrategy: {
+                    ttl: 60 * 60,
+                },
             })
 
             return { team }

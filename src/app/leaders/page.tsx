@@ -6,6 +6,16 @@ import {
     LeadersSkeleton,
     categories,
 } from '@/components/LeaderCard'
+import { Metadata } from 'next'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
+
+export const generateMetadata = (): Metadata => {
+    const currentSeason = getCurrentSeason()
+    return {
+        title: `Nuggets Leaders ${currentSeason - 1}-${currentSeason}`,
+        description: `Nuggets Leaders for the ${currentSeason} season.`,
+    }
+}
 
 // has to be dynamic else prerender error
 export const dynamic = 'force-dynamic'

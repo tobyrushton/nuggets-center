@@ -63,6 +63,9 @@ export const getLeaders = publicProcedure
             include: {
                 player: true,
             },
+            cacheStrategy: {
+                ttl: 60 * 60,
+            },
         })
 
         return {

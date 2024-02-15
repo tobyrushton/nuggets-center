@@ -15,10 +15,25 @@ import {
 } from '@/components/ui/table'
 import { BoxScore, BoxScoreSkeleton } from '@/components/BoxScore'
 import dayjs from 'dayjs'
+import { Metadata } from 'next'
 
-interface GamePageProps {
+export interface GamePageProps {
     params: {
         id: string
+    }
+}
+
+export const generateMetadata = async ({
+    params: { id },
+}: GamePageProps): Promise<Metadata> => {
+    const { game } = await serverClient.getGame({ id })
+
+    return {
+        title:
+            game.home_score !== -1 && game.opponent_score !== -1
+                ? `Denver Nuggets ${game.home ? game.home_score : game.opponent_score} - ${game.home ? game.opponent_score : game.home_score} ${game.opponent.name}`
+                : `${dayjs(game.date).format('MM/DD/YYYY')} vs ${game.opponent.name}`,
+        description: `Nuggets box score vs ${game.opponent.name} on ${dayjs(game.date).format('MM/DD/YYYY')}.`,
     }
 }
 
@@ -34,7 +49,7 @@ const GamePage: FC<GamePageProps> = async ({ params: { id } }) => {
                 <span className="flex flex-col items-center">
                     <Image
                         src={team.logo_url}
-                        alt={team.name}
+                        alt={`${team.name} logo`}
                         width={100}
                         height={100}
                     />
@@ -73,7 +88,7 @@ const GamePage: FC<GamePageProps> = async ({ params: { id } }) => {
                 >
                     <Image
                         src={game.opponent.logo_url}
-                        alt={game.opponent.name}
+                        alt={`${game.opponent.name} logo`}
                         width={100}
                         height={100}
                     />

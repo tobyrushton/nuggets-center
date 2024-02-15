@@ -1,6 +1,16 @@
 import 'server-only'
 import { FC } from 'react'
 import { Schedule } from '@/components/Schedule'
+import { Metadata } from 'next'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
+
+export const generateMetadata = (): Metadata => {
+    const currentSeason = getCurrentSeason()
+    return {
+        title: `Denver Nuggets ${currentSeason - 1}-${currentSeason} Schedule`,
+        description: `Denver Nuggets Schedule for the ${currentSeason} season.`,
+    }
+}
 
 export const revalidate = 60 * 60 * 12 // every 12 hour
 

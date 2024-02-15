@@ -28,6 +28,9 @@ export const getRoster = publicProcedure
                 position: true,
                 profile_url: true,
             },
+            cacheStrategy: {
+                ttl: 60 * 60,
+            },
         })
 
         return { roster }
