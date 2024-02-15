@@ -3,7 +3,6 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { FC, ReactNode } from 'react'
 import { GeistSans } from 'geist/font/sans'
-import { TRPCProvider } from '@/components/providers/TRPCProvider'
 import { Navbar } from '@/components/Nav'
 import './globals.css'
 
@@ -37,12 +36,10 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
             <body className={GeistSans.className}>
                 <Analytics />
                 <SpeedInsights />
-                <TRPCProvider>
-                    <Navbar />
-                    <main className="absolute w-full h-[calc(100%-4rem)] bg-white dark:bg-black overflow-y-auto text-black dark:text-white">
-                        {children}
-                    </main>
-                </TRPCProvider>
+                <Navbar />
+                <main className="absolute w-full h-[calc(100%-4rem)] bg-white dark:bg-black overflow-y-auto text-black dark:text-white">
+                    {children}
+                </main>
             </body>
         </html>
     )
