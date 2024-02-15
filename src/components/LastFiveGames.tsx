@@ -83,11 +83,7 @@ export const LastFiveGames: FC = async () => {
                                                             : game.opponent
                                                                   .logo_url
                                                     }
-                                                    alt={
-                                                        game.home
-                                                            ? team.name
-                                                            : game.opponent.name
-                                                    }
+                                                    alt={`${game.home ? team.name : game.opponent.name} Logo`}
                                                     height={25}
                                                     width={25}
                                                 />
@@ -108,11 +104,7 @@ export const LastFiveGames: FC = async () => {
                                                                   .logo_url
                                                             : team.logo_url
                                                     }
-                                                    alt={
-                                                        game.home
-                                                            ? game.opponent.name
-                                                            : team.name
-                                                    }
+                                                    alt={`${game.home ? game.opponent.name : team.name} Logo`}
                                                     height={25}
                                                     width={25}
                                                 />

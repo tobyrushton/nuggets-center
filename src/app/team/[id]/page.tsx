@@ -31,7 +31,7 @@ const TeamPage: FC<TeamPageProps> = async ({ params: { id } }) => {
             <div className="flex flex-row gap-2 p-3 items-center justify-center sm:justify-start">
                 <Image
                     src={team.logo_url}
-                    alt={team.name}
+                    alt={`${team.name} logo`}
                     width={100}
                     height={100}
                 />

@@ -49,7 +49,7 @@ const GamePage: FC<GamePageProps> = async ({ params: { id } }) => {
                 <span className="flex flex-col items-center">
                     <Image
                         src={team.logo_url}
-                        alt={team.name}
+                        alt={`${team.name} logo`}
                         width={100}
                         height={100}
                     />
@@ -88,7 +88,7 @@ const GamePage: FC<GamePageProps> = async ({ params: { id } }) => {
                 >
                     <Image
                         src={game.opponent.logo_url}
-                        alt={game.opponent.name}
+                        alt={`${game.opponent.name} logo`}
                         width={100}
                         height={100}
                     />

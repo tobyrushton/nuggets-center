@@ -38,7 +38,7 @@ const PlayerPage: FC<PlayerPageProps> = async ({ params: { id } }) => {
                 <div className="flex fex-row gap-2 px-2 min-w-fit">
                     <Image
                         src={player.profile_url}
-                        alt={`${player.first_name} ${player.last_name}`}
+                        alt={`${player.first_name} ${player.last_name} headshot`}
                         width={200}
                         height={200}
                     />

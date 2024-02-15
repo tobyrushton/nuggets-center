@@ -92,7 +92,7 @@ const LeaderItem: FC<LeaderItemProps> = ({ player, first }) => {
             </p>
             <Image
                 src={player.profile_url}
-                alt={player.player_name}
+                alt={`${player.player_name} headshot`}
                 width={first ? 200 : 100}
                 height={first ? 200 : 100}
                 className="self-center"
