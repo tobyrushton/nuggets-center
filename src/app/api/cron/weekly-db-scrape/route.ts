@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { updateTeams } from '@/server/functions/update-teams'
 import { updateSchedule } from '@/server/functions/update-schedule'
 
+export const dynamic = 'force-dynamic'
+
 // cron job to be ran weekly
 export const GET = async (): Promise<NextResponse> => {
     try {
