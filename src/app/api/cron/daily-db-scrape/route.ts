@@ -3,6 +3,8 @@ import { updateGameStats } from '@/server/functions/update-game-stats'
 import { updatePlayers } from '@/server/functions/update-player'
 import { updateSeasonAverages } from '@/server/functions/update-season-averages'
 
+export const dynamic = 'force-dynamic'
+
 // cron job to be ran daily
 export const GET = async (): Promise<NextResponse> => {
     try {
