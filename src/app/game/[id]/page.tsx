@@ -16,6 +16,7 @@ import {
 import { BoxScore, BoxScoreSkeleton } from '@/components/BoxScore'
 import dayjs from 'dayjs'
 import { Metadata } from 'next'
+import { GameDate } from './game-date'
 
 export interface GamePageProps {
     params: {
@@ -98,7 +99,7 @@ const GamePage: FC<GamePageProps> = async ({ params: { id } }) => {
             <Separator />
             {game.opponent_score === -1 || game.home_score === -1 ? (
                 <p className="text-center text-4xl">
-                    {dayjs(game.date).format('MM/DD/YYYY')}
+                    <GameDate date={game.date} />
                 </p>
             ) : (
                 <Table>
