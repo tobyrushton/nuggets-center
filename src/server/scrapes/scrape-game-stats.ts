@@ -74,7 +74,11 @@ export const scrapeGameStats = async (
     rows.forEach(row => {
         const cells = row.querySelectorAll('.Table__TD')
         const regex = /[A-Za-z]+ [0-9]+\/[0-9]+/i
-        if (cells[0] && regex.test(cells[0].textContent as string)) {
+        if (
+            cells[0] &&
+            regex.test(cells[0].textContent as string) &&
+            !cells[1].textContent?.includes('*') // indicates it was a special game, ASG
+        ) {
             const date = cells[0].textContent?.split(' ')[1] as string
             const pts = cells[16].textContent as string
             const reb = cells[10].textContent as string
