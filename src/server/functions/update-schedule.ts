@@ -1,4 +1,5 @@
 import { scheduleGameIsEqual } from '@/lib/scheduleGameIsEqual'
+import { sameDay } from '@/lib/sameDay'
 import prisma from '../db/client'
 import { scrapeSchedule } from '../scrapes/scrape-schedule'
 
@@ -14,13 +15,14 @@ export const updateSchedule = async (): Promise<void> => {
     ])
 
     const newGamesNotInDb = schedule.filter(
-        game => !scheduleInDb.some(gameInDb => game.date === gameInDb.date)
+        game =>
+            !scheduleInDb.some(gameInDb => sameDay(game.date, gameInDb.date))
     )
 
     const gamesToUpdate = schedule.filter(game =>
         scheduleInDb.some(
             gameInDb =>
-                game.date === gameInDb.date &&
+                sameDay(gameInDb.date, game.date) &&
                 !scheduleGameIsEqual(game, gameInDb)
         )
     )
@@ -28,8 +30,8 @@ export const updateSchedule = async (): Promise<void> => {
     if (gamesToUpdate.length > 0)
         await Promise.all(
             gamesToUpdate.map(async game => {
-                const gameId = scheduleInDb.find(
-                    gameInDb => game.date === gameInDb.date
+                const gameId = scheduleInDb.find(gameInDb =>
+                    sameDay(gameInDb.date, game.date)
                 )?.id
 
                 if (!gameId) return
