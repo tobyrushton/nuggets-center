@@ -3,7 +3,6 @@ import { updateTeams } from '@/server/functions/update-teams'
 import { updateSchedule } from '@/server/functions/update-schedule'
 
 export const dynamic = 'force-dynamic'
-export const runtime = 'edge'
 
 // cron job to be ran weekly
 export const GET = async (): Promise<NextResponse> => {
