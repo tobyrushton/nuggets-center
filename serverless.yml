@@ -1,0 +1,34 @@
+service: nuggets-center
+
+plugins:
+  - serverless-esbuild # used for compiling/packaging the Typescript code
+  - serverless-offline # used for local execution
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-west-1
+  stage: ${opt:stage}
+  timeout: 30   # repository wide Lambda timeout
+  environment:  # repository wide Lambda env variables
+    STAGE: ${self:provider.stage}
+
+functions:
+  # Serverless Framework specific syntax
+  daily-scrape:
+    handler: ./src/server/lambda/daily-scrape.handler
+    events:
+      - schedule:
+          rate: rate(1 day) # triggers everyday
+          enabled: true
+
+
+  weekly-scrape:
+    handler: ./src/server/lambda/weekly-scrape.handler
+    timeout: 10
+    events:
+      - schedule:
+          rate: rate(7 days) # triggers every 7 days
+          enabled: true
