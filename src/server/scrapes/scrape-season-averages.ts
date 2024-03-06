@@ -1,6 +1,4 @@
-import jsdom from 'jsdom'
-
-const { JSDOM } = jsdom
+import puppeteer from 'puppeteer'
 
 interface IGameStatsScrape {
     games_played: number
@@ -35,67 +33,77 @@ interface ISeasonAveragesScrape extends IGameStatsScrape, IShootingStatsScrape {
 export const scrapeSeasonAverages = async (): Promise<
     ISeasonAveragesScrape[]
 > => {
-    const res = await fetch('https://www.espn.co.uk/nba/team/stats/_/name/den')
-    const dom = new JSDOM(await res.text())
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+    await page.goto('https://www.espn.co.uk/nba/team/stats/_/name/den')
 
-    const tables = dom.window.document.querySelectorAll('.Table')
+    const seasonAverages = await page.evaluate(() => {
+        const tables = window.document.querySelectorAll('.Table')
 
-    // as the names are stored in a different table but have the same index
-    // array of the names is created in order to track their indexes in the table
-    const namesElement = tables[0].querySelectorAll('.Table__TD a')
-    const names = Array.from(namesElement).map(
-        name => name.textContent
-    ) as string[]
-
-    const gameStats: IGameStatsScrape[] = names.map((name, index) => {
-        const statsRow = tables[1].querySelectorAll('.Table__TR')[index + 1]
-        const statsContent = statsRow.querySelectorAll('.Table__TD')
-        const statsArray = Array.from(statsContent).map(
-            stat => stat.textContent
+        // as the names are stored in a different table but have the same index
+        // array of the names is created in order to track their indexes in the table
+        const namesElement = tables[0].querySelectorAll('.Table__TD a')
+        const names = Array.from(namesElement).map(
+            name => name.textContent
         ) as string[]
 
-        return {
-            games_played: parseInt(statsArray[0], 10),
-            min: parseFloat(statsArray[2]),
-            pts: parseFloat(statsArray[3]),
-            oreb: parseFloat(statsArray[4]),
-            dreb: parseFloat(statsArray[5]),
-            reb: parseFloat(statsArray[6]),
-            ast: parseFloat(statsArray[7]),
-            stl: parseFloat(statsArray[8]),
-            blk: parseFloat(statsArray[9]),
-            turnover: parseFloat(statsArray[10]),
-            pf: parseFloat(statsArray[11]),
-        }
-    })
+        const gameStats: IGameStatsScrape[] = names.map((name, index) => {
+            const statsRow = tables[1].querySelectorAll('.Table__TR')[index + 1]
+            const statsContent = statsRow.querySelectorAll('.Table__TD')
+            const statsArray = Array.from(statsContent).map(
+                stat => stat.textContent
+            ) as string[]
 
-    const shootingStats: IShootingStatsScrape[] = names.map((name, index) => {
-        const statsRow = tables[3].querySelectorAll('.Table__TR')[index + 1]
-        const statsContent = statsRow.querySelectorAll('.Table__TD')
-        const statsArray = Array.from(statsContent).map(
-            stat => stat.textContent
-        ) as string[]
-
-        return {
-            fgm: parseFloat(statsArray[0]),
-            fga: parseFloat(statsArray[1]),
-            fg_pct: parseFloat(statsArray[2]),
-            fg3m: parseFloat(statsArray[3]),
-            fg3a: parseFloat(statsArray[4]),
-            fg3_pct: parseFloat(statsArray[5]),
-            ftm: parseFloat(statsArray[6]),
-            fta: parseFloat(statsArray[7]),
-            ft_pct: parseFloat(statsArray[8]),
-        }
-    })
-
-    const seasonAverages: ISeasonAveragesScrape[] = names.map(
-        (name, index) => ({
-            player_name: name,
-            ...gameStats[index],
-            ...shootingStats[index],
+            return {
+                games_played: parseInt(statsArray[0], 10),
+                min: parseFloat(statsArray[2]),
+                pts: parseFloat(statsArray[3]),
+                oreb: parseFloat(statsArray[4]),
+                dreb: parseFloat(statsArray[5]),
+                reb: parseFloat(statsArray[6]),
+                ast: parseFloat(statsArray[7]),
+                stl: parseFloat(statsArray[8]),
+                blk: parseFloat(statsArray[9]),
+                turnover: parseFloat(statsArray[10]),
+                pf: parseFloat(statsArray[11]),
+            }
         })
-    )
+
+        const shootingStats: IShootingStatsScrape[] = names.map(
+            (name, index) => {
+                const statsRow =
+                    tables[3].querySelectorAll('.Table__TR')[index + 1]
+                const statsContent = statsRow.querySelectorAll('.Table__TD')
+                const statsArray = Array.from(statsContent).map(
+                    stat => stat.textContent
+                ) as string[]
+
+                return {
+                    fgm: parseFloat(statsArray[0]),
+                    fga: parseFloat(statsArray[1]),
+                    fg_pct: parseFloat(statsArray[2]),
+                    fg3m: parseFloat(statsArray[3]),
+                    fg3a: parseFloat(statsArray[4]),
+                    fg3_pct: parseFloat(statsArray[5]),
+                    ftm: parseFloat(statsArray[6]),
+                    fta: parseFloat(statsArray[7]),
+                    ft_pct: parseFloat(statsArray[8]),
+                }
+            }
+        )
+
+        const seasonAveragesScrape: ISeasonAveragesScrape[] = names.map(
+            (name, index) => ({
+                player_name: name,
+                ...gameStats[index],
+                ...shootingStats[index],
+            })
+        )
+
+        return seasonAveragesScrape
+    })
+
+    await browser.close()
 
     return seasonAverages
 }

@@ -1,6 +1,4 @@
-import jsdom from 'jsdom'
-
-const { JSDOM } = jsdom
+import puppeteer from 'puppeteer'
 
 interface ITeamScrape {
     name: string
@@ -8,27 +6,35 @@ interface ITeamScrape {
 }
 
 export const scrapeTeams = async (): Promise<ITeamScrape[]> => {
-    const res = await fetch('https://www.espn.co.uk/nba/teams')
-    const dom = new JSDOM(await res.text())
-    const teamLinks = dom.window.document.querySelectorAll('.TeamLinks')
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
 
-    const teams: ITeamScrape[] = []
-    teamLinks.forEach(teamLink => {
-        const teamName = teamLink.querySelector('h2')?.innerHTML
+    await page.goto('https://www.espn.co.uk/nba/teams')
 
-        // gets team abbreviation in order to get the link to the teams logo
-        const linkToTeam = teamLink.querySelector('a')?.getAttribute('href')
-        const teamAbbreviation = linkToTeam?.split('/')[5]
+    const teams = await page.evaluate(() => {
+        const teamLinks = window.document.querySelectorAll('.TeamLinks')
+        const teamsScrape: ITeamScrape[] = []
+        teamLinks.forEach(teamLink => {
+            const teamName = teamLink.querySelector('h2')?.innerHTML
 
-        const teamLogo = `https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/${teamAbbreviation}.png`
+            // gets team abbreviation in order to get the link to the teams logo
+            const linkToTeam = teamLink.querySelector('a')?.getAttribute('href')
+            const teamAbbreviation = linkToTeam?.split('/')[5]
 
-        if (teamName && teamLogo) {
-            teams.push({
-                name: teamName,
-                logo_url: teamLogo,
-            })
-        }
+            const teamLogo = `https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/${teamAbbreviation}.png`
+
+            if (teamName && teamLogo) {
+                teamsScrape.push({
+                    name: teamName,
+                    logo_url: teamLogo,
+                })
+            }
+        })
+
+        return teamsScrape
     })
+
+    await browser.close()
 
     return teams
 }

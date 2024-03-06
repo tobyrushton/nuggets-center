@@ -1,6 +1,4 @@
-import jsdom from 'jsdom'
-
-const { JSDOM } = jsdom
+import puppeteer from 'puppeteer'
 
 interface IScrapeGameStats {
     pts: number
@@ -33,21 +31,24 @@ export interface IGameStats extends IScrapeGameStats {
  * @returns array of links
  */
 export const getLogLinks = async (): Promise<string[]> => {
-    const res = await fetch(
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+    await page.goto(
         'https://www.espn.co.uk/nba/team/roster/_/name/den/denver-nuggets'
     )
-    const dom = new JSDOM(await res.text())
 
-    const links = dom.window.document.querySelectorAll('.Table__TD--headshot a')
+    const logLinks = await page.evaluate(() => {
+        const links = Array.from(
+            window.document.querySelectorAll('.Table__TD--headshot a')
+        ).map(link => link.getAttribute('href'))
+        return links as string[]
+    })
 
-    const profileLinks = Array.from(links).map(link =>
-        link.getAttribute('href')
-    ) as string[]
+    await browser.close()
 
-    const logLinks = Array.from(profileLinks).map(link =>
+    return Array.from(logLinks).map(link =>
         link.replace('player', 'player/gamelog')
     )
-    return logLinks
 }
 
 /**
@@ -58,65 +59,72 @@ export const getLogLinks = async (): Promise<string[]> => {
 export const scrapeGameStats = async (
     url: string
 ): Promise<IScrapeGameStats[]> => {
-    const res = await fetch(url, { cache: 'no-cache' })
-    const dom = new JSDOM(await res.text())
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+    await page.goto(url)
 
-    const gameStats: IScrapeGameStats[] = []
+    const stats = await page.evaluate(() => {
+        const gameStatsScrape: IScrapeGameStats[] = []
 
-    const table =
-        dom.window.document.querySelector('.Table__Title')?.parentElement
+        const table =
+            window.document.querySelector('.Table__Title')?.parentElement
 
-    // if player has not played this season
-    if (!table) return gameStats
+        // if player has not played this season
+        if (!table) return gameStatsScrape
 
-    const rows = (table as Element).querySelectorAll('.Table__TR')
+        const rows = (table as Element).querySelectorAll('.Table__TR')
 
-    rows.forEach(row => {
-        const cells = row.querySelectorAll('.Table__TD')
-        const regex = /[A-Za-z]+ [0-9]+\/[0-9]+/i
-        if (
-            cells[0] &&
-            regex.test(cells[0].textContent as string) &&
-            !cells[1].textContent?.includes('*') // indicates it was a special game, ASG
-        ) {
-            const date = cells[0].textContent?.split(' ')[1] as string
-            const pts = cells[16].textContent as string
-            const reb = cells[10].textContent as string
-            const ast = cells[11].textContent as string
-            const blk = cells[12].textContent as string
-            const stl = cells[13].textContent as string
-            const pf = cells[14].textContent as string
-            const turnover = cells[15].textContent as string
-            const min = cells[3].textContent as string
-            const [fgm, fga] = (cells[4].textContent as string).split('-')
-            const fg_pct = cells[5].textContent as string
-            const [fg3m, fg3a] = (cells[6].textContent as string).split('-')
-            const fg3_pct = cells[7].textContent as string
-            const [ftm, fta] = (cells[8].textContent as string).split('-')
-            const ft_pct = cells[9].textContent as string
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('.Table__TD')
+            const regex = /[A-Za-z]+ [0-9]+\/[0-9]+/i
+            if (
+                cells[0] &&
+                regex.test(cells[0].textContent as string) &&
+                !cells[1].textContent?.includes('*') // indicates it was a special game, ASG
+            ) {
+                const date = cells[0].textContent?.split(' ')[1] as string
+                const pts = cells[16].textContent as string
+                const reb = cells[10].textContent as string
+                const ast = cells[11].textContent as string
+                const blk = cells[12].textContent as string
+                const stl = cells[13].textContent as string
+                const pf = cells[14].textContent as string
+                const turnover = cells[15].textContent as string
+                const min = cells[3].textContent as string
+                const [fgm, fga] = (cells[4].textContent as string).split('-')
+                const fg_pct = cells[5].textContent as string
+                const [fg3m, fg3a] = (cells[6].textContent as string).split('-')
+                const fg3_pct = cells[7].textContent as string
+                const [ftm, fta] = (cells[8].textContent as string).split('-')
+                const ft_pct = cells[9].textContent as string
 
-            gameStats.push({
-                pts: parseFloat(pts),
-                reb: parseFloat(reb),
-                ast: parseFloat(ast),
-                blk: parseFloat(blk),
-                stl: parseFloat(stl),
-                pf: parseFloat(pf),
-                turnover: parseFloat(turnover),
-                min,
-                fgm: parseFloat(fgm),
-                fga: parseFloat(fga),
-                fg3m: parseFloat(fg3m),
-                fg3a: parseFloat(fg3a),
-                ftm: parseFloat(ftm),
-                fta: parseFloat(fta),
-                fg_pct: parseFloat(fg_pct),
-                fg3_pct: parseFloat(fg3_pct),
-                ft_pct: parseFloat(ft_pct),
-                date,
-            })
-        }
+                gameStatsScrape.push({
+                    pts: parseFloat(pts),
+                    reb: parseFloat(reb),
+                    ast: parseFloat(ast),
+                    blk: parseFloat(blk),
+                    stl: parseFloat(stl),
+                    pf: parseFloat(pf),
+                    turnover: parseFloat(turnover),
+                    min,
+                    fgm: parseFloat(fgm),
+                    fga: parseFloat(fga),
+                    fg3m: parseFloat(fg3m),
+                    fg3a: parseFloat(fg3a),
+                    ftm: parseFloat(ftm),
+                    fta: parseFloat(fta),
+                    fg_pct: parseFloat(fg_pct),
+                    fg3_pct: parseFloat(fg3_pct),
+                    ft_pct: parseFloat(ft_pct),
+                    date,
+                })
+            }
+        })
+
+        return gameStatsScrape
     })
 
-    return gameStats
+    await browser.close()
+
+    return stats
 }
