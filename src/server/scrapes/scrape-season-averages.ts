@@ -38,9 +38,8 @@ export const scrapeSeasonAverages = async (): Promise<
     await page.setViewport({
         width: 1920,
         height: 1080,
-      });
+    })
     await page.goto('https://www.espn.co.uk/nba/team/stats/_/name/den')
-
 
     const seasonAverages = await page.evaluate(() => {
         const tables = window.document.querySelectorAll('.Table')
