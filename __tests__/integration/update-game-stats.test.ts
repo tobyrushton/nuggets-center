@@ -18,7 +18,7 @@ describe('updateGameStats', () => {
 
         const count = await prisma.playerGame.count()
         expect(count).toBeGreaterThan(0)
-    }, 50000)
+    })
 
     it('should add new game stats when some are in db', async () => {
         await updateGameStats()
@@ -42,7 +42,7 @@ describe('updateGameStats', () => {
 
         const thirdCount = await prisma.playerGame.count()
         expect(thirdCount).toBe(firstCount)
-    }, 50000)
+    })
 
     it('should not add new game stats when all are in db', async () => {
         await updateGameStats()
@@ -52,5 +52,5 @@ describe('updateGameStats', () => {
 
         const secondCount = await prisma.playerGame.count()
         expect(secondCount).toBe(firstCount)
-    }, 50000)
+    })
 })
