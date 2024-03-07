@@ -56,7 +56,11 @@ const ScheduleItemSkeleton: FC = () => (
 
 const ScheduleItem: FC<ScheduleItemProps> = ({ game }) => (
     <TableRow>
-        <TableCell>{dayjs(game.date).format('MM/DD/YYYY')}</TableCell>
+        <TableCell>
+            <Link href={`/game/${game.id}`}>
+                {dayjs(game.date).format('MM/DD/YYYY')}
+            </Link>
+        </TableCell>
         <TableCell>
             <Link
                 href={`/team/${game.opponent.id}`}
