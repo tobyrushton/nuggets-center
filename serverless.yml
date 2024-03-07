@@ -3,6 +3,7 @@ service: nuggets-center
 plugins:
   - serverless-esbuild # used for compiling/packaging the Typescript code
   - serverless-offline # used for local execution
+  - serverless-ssm-fetch
 
 useDotenv: true
 
@@ -20,6 +21,9 @@ custom:
     external:
       - jsdom
     packager: npm
+  serverlessSsmFetch:
+    DATABASE_URL: /nuggets-center/DATABASE_URL
+    DIRECT_URL: /nuggets-center/DIRECT_URL
 
 functions:
   # Serverless Framework specific syntax
