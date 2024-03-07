@@ -4,9 +4,12 @@ on:
     pull_request:
         branches:
             - production
+env:
+    DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    DIRECT_URL: ${{ secrets.DIRECT_URL }}
 
 jobs:
-    lint:
+    build:
         runs-on: ubuntu-latest
 
         strategy:
