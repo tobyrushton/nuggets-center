@@ -1,4 +1,4 @@
-name: Next / Lint
+name: Next / Build
 
 on: 
     pull_request:
@@ -19,7 +19,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node-version }}
-            - name: npm ci and lint
+            - name: npm ci and build
               run: |
                   npm ci
-                  npm run lint
+                  npm run build
