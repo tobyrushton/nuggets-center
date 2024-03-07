@@ -2,7 +2,7 @@ import 'server-only'
 import { FC, Suspense } from 'react'
 import { serverClient } from '@/app/_trpc/serverClient'
 import Link from 'next/link'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import { Separator } from './ui/separator'
@@ -44,15 +44,12 @@ const Leader: FC<LeaderProps> = async ({ leader }) => {
                 href={`/player/${player.player_id}`}
                 className="flex flex-row gap-2"
             >
-                <Avatar className="w-16 h-12">
-                    <AvatarImage
-                        src={player.profile_url}
-                        alt={`${player.player_name} headshot`}
-                    />
-                    <AvatarFallback>
-                        <Skeleton className="w-12 h-12 rounded-full" />
-                    </AvatarFallback>
-                </Avatar>
+                <Image
+                    src={player.profile_url}
+                    alt={`${player.player_name} headshot`}
+                    width={64}
+                    height={48}
+                />
                 <span>
                     <p>{player.player_name}</p>
                     <p>{player.value}</p>
