@@ -15,6 +15,12 @@ provider:
   environment:  # repository wide Lambda env variables
     STAGE: ${self:provider.stage}
 
+custom:
+  esbuild:
+    external:
+      - jsdom
+    packager: npm
+
 functions:
   # Serverless Framework specific syntax
   daily-scrape:
@@ -23,8 +29,6 @@ functions:
       - schedule:
           rate: rate(1 day) # triggers everyday
           enabled: true
-
-
   weekly-scrape:
     handler: ./src/server/lambda/weekly-scrape.handler
     timeout: 10
