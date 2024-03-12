@@ -20,7 +20,7 @@ export const updateGameScores = async (): Promise<void> => {
         )
     })
 
-    if(gamesToUpdate.length > 0)
+    if (gamesToUpdate.length > 0)
         await Promise.all(
             gamesToUpdate.map(async game => {
                 const matchingGameScore = gameScores.find(gameScore =>
