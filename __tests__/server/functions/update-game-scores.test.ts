@@ -31,7 +31,6 @@ describe('updateGameScores', () => {
                 ...gameStat,
             }))
         )
-
         ;(scrapeGameScores as Mock).mockResolvedValue([
             {
                 date: new Date('01/01/24').toISOString(),

@@ -6,6 +6,7 @@ namespace player {
         id: string
         first_name: string
         last_name: string
+        position: string
         weight: number
         height_feet: number
         height_inches: number

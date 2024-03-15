@@ -10,7 +10,7 @@ vi.mock('../../../src/server/scrapes/scrape-players', () => ({
 
 const positions = ['PG', 'SG', 'SF', 'PF', 'C']
 
-export const generatePlayer = () => ({
+export const generatePlayer = (): Omit<player.IPlayer, 'id'> => ({
     first_name: faker.person.firstName(),
     last_name: faker.person.lastName(),
     position: faker.helpers.arrayElement(positions),
@@ -24,6 +24,7 @@ const mockPlayers = Array.from({ length: 10 }, generatePlayer)
 
 describe('updatePlayers', () => {
     it('should update players', async () => {
+        // eslint-disable-next-line
         (scrapePlayers as Mock).mockResolvedValue(mockPlayers)
         prismaMock.player.findMany.mockResolvedValue([])
         prismaMock.player.createMany.mockResolvedValue({ count: 10 })

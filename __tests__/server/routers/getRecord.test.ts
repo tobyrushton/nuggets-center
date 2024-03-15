@@ -18,7 +18,9 @@ describe('api/getRecord', () => {
                 ...generateGameWithScore(mockTeamNames),
                 id: faker.string.uuid(),
                 opponent_id: faker.string.uuid(),
+                opponent_name: faker.helpers.arrayElement(mockTeamNames),
             }))
+            // eslint-disable-next-line
         ) as any[]
 
         const equalScores = mockGames.reduce((acc, curr) => {
@@ -88,6 +90,7 @@ describe('api/getRecord', () => {
                 opponent_score: 100,
                 home: true,
             },
+            // eslint-disable-next-line
         ] as any)
 
         const record = await serverClient.getRecord()

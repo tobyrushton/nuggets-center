@@ -17,6 +17,7 @@ describe('updateSeasonAverages', () => {
     })
 
     it('should update season averages', async () => {
+        // eslint-disable-next-line
         (scrapeSeasonAverages as Mock).mockResolvedValue(mockSeasonAverages)
         const mockSeasonAveragesInDb = mockSeasonAverages.map(
             ({ player_name, ...seasonAverage }) => ({

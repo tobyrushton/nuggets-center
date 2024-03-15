@@ -1,11 +1,11 @@
+import prisma from '@/server/db/client'
 import { updateGameStats } from '../src/server/functions/update-game-stats'
 import { updatePlayers } from '../src/server/functions/update-player'
 import { updateTeams } from '../src/server/functions/update-teams'
 import { updateSchedule } from '../src/server/functions/update-schedule'
 import { updateSeasonAverages } from '../src/server/functions/update-season-averages'
-import prisma from '@/server/db/client'
 
-const main = async ():Promise<void> => {
+const main = async (): Promise<void> => {
     await prisma.$transaction([
         prisma.seasonAverages.deleteMany(),
         prisma.playerGame.deleteMany(),

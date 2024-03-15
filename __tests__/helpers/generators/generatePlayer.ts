@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 
 const positions = ['PG', 'SG', 'SF', 'PF', 'C']
 
-export const generatePlayer = () => ({
+export const generatePlayer = (): Omit<player.IPlayer, 'id'> => ({
     first_name: faker.person.firstName(),
     last_name: faker.person.lastName(),
     position: faker.helpers.arrayElement(positions),

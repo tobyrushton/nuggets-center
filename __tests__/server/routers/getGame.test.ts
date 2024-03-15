@@ -24,6 +24,7 @@ describe('api/getGame', () => {
             opponent_score: mockGame.opponent_score,
             home_score: mockGame.home_score,
             home: true,
+            // eslint-disable-next-line
         } as any)
 
         const game = await serverClient.getGame({ id: '1' })
