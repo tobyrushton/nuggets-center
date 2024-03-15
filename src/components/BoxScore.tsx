@@ -39,7 +39,7 @@ const BoxScoreItemSkeleton: FC = () => {
 const BoxScoreItem: FC<BoxScoreItemProps> = async ({ stats }) => {
     return (
         <TableRow className="text-nowrap">
-            <TableCell>
+            <TableCell className="sticky left-0 bg-white dark:bg-black">
                 <Link href={`/player/${stats.player.id}`}>
                     {shortenName(
                         `${stats.player.first_name} ${stats.player.last_name}`
