@@ -1,7 +1,13 @@
-import { PrismaClient } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
+import { PrismaClient } from '@prisma/client'
+import { PrismaNeon } from '@prisma/adapter-neon'
+import { Pool, neonConfig } from '@neondatabase/serverless'
+import ws from 'ws'
 
-const prisma = new PrismaClient().$extends(withAccelerate())
+neonConfig.webSocketConstructor = ws
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+const adapter = new PrismaNeon(pool)
+const prisma = new PrismaClient({ adapter })
 
 export type PrismaClientSingleton = typeof prisma
 
