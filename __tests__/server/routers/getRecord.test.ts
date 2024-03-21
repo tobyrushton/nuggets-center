@@ -43,7 +43,6 @@ describe('api/getRecord', () => {
                     not: -1,
                 },
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(record.wins + record.losses).toBe(80 - equalScores)
@@ -63,7 +62,6 @@ describe('api/getRecord', () => {
                     not: -1,
                 },
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(record.wins).toBe(0)
@@ -104,7 +102,6 @@ describe('api/getRecord', () => {
                     not: -1,
                 },
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
         expect(record).toEqual({ wins: 2, losses: 1 })
     })

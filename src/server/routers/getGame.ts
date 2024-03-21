@@ -42,9 +42,6 @@ export const getGame = publicProcedure
                 home_score: true,
                 home: true,
             },
-            cacheStrategy: {
-                ttl: 60 * 60,
-            },
         })
 
         return { game: { ...game, date: new Date(game.date) } }

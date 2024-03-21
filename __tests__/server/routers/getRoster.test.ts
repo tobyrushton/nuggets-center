@@ -23,7 +23,6 @@ describe('api/getRoster', () => {
                 position: true,
                 profile_url: true,
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(roster).toHaveLength(5)
