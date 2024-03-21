@@ -8,20 +8,16 @@ vi.mock('../../../src/server/scrapes/scrape-teams', () => ({
     scrapeTeams: vi.fn(),
 }))
 
-const generateTeam = () => ({
+const generateTeam = (): Omit<team.ITeam, 'id'> => ({
     name: faker.lorem.word(),
-    conference: faker.lorem.word(),
-    division: faker.lorem.word(),
-    city: faker.lorem.word(),
-    full_name: faker.lorem.word(),
     logo_url: faker.internet.url(),
-    team_id: faker.string.uuid(),
 })
 
 const mockTeams = Array.from({ length: 10 }, generateTeam)
 
 describe('updateTeams', () => {
     it('should add new teams', async () => {
+        // eslint-disable-next-line
         (scrapeTeams as Mock).mockResolvedValue(mockTeams)
         prismaMock.team.findMany.mockResolvedValue([])
 
@@ -33,6 +29,7 @@ describe('updateTeams', () => {
     })
 
     it('should not add new teams if teams are already in db', async () => {
+        // eslint-disable-next-line
         (scrapeTeams as Mock).mockResolvedValue(mockTeams)
         prismaMock.team.findMany.mockResolvedValue(
             mockTeams.map(team => ({ ...team, id: faker.string.uuid() }))

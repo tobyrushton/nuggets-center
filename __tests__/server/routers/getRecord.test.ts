@@ -18,7 +18,9 @@ describe('api/getRecord', () => {
                 ...generateGameWithScore(mockTeamNames),
                 id: faker.string.uuid(),
                 opponent_id: faker.string.uuid(),
+                opponent_name: faker.helpers.arrayElement(mockTeamNames),
             }))
+            // eslint-disable-next-line
         ) as any[]
 
         const equalScores = mockGames.reduce((acc, curr) => {
@@ -41,7 +43,6 @@ describe('api/getRecord', () => {
                     not: -1,
                 },
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(record.wins + record.losses).toBe(80 - equalScores)
@@ -61,7 +62,6 @@ describe('api/getRecord', () => {
                     not: -1,
                 },
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(record.wins).toBe(0)
@@ -88,6 +88,7 @@ describe('api/getRecord', () => {
                 opponent_score: 100,
                 home: true,
             },
+            // eslint-disable-next-line
         ] as any)
 
         const record = await serverClient.getRecord()
@@ -101,7 +102,6 @@ describe('api/getRecord', () => {
                     not: -1,
                 },
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
         expect(record).toEqual({ wins: 2, losses: 1 })
     })

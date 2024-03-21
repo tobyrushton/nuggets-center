@@ -27,9 +27,6 @@ export const getRecord = publicProcedure
                     not: -1,
                 },
             },
-            cacheStrategy: {
-                ttl: 60 * 60,
-            },
         })
 
         const record: IRecord = teamsWithScores.reduce<IRecord>(

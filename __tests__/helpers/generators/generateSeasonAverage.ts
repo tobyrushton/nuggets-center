@@ -1,6 +1,9 @@
 import { faker } from '@faker-js/faker'
 
-export const generateSeasonAverage = () => ({
+export const generateSeasonAverage = (): Omit<
+    player.ISeasonAverage,
+    'id' | 'player_id' | 'min' | 'season'
+> & { player_name: string; min: number } => ({
     player_name: `${faker.person.firstName()} ${faker.person.lastName()}`,
     games_played: faker.number.int({ min: 0, max: 82 }),
     min: faker.number.float({ min: 0, max: 48 }),

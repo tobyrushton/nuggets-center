@@ -1,13 +1,17 @@
 import { faker } from '@faker-js/faker'
 import { IScheduleScrape } from '@/server/scrapes/scrape-schedule'
 
-export const generateGame = (teamNames: string[]) => ({
+export const generateGame = (
+    teamNames: string[]
+): { date: string; home: boolean; opponent_name: string } => ({
     date: `${faker.number.int({ min: 1, max: 12 })}/${faker.number.int({ min: 1, max: 28 })}`,
     home: faker.datatype.boolean(),
     opponent_name: faker.helpers.arrayElement(teamNames),
 })
 
-export const generateGameWithScore = (teamNames: string[]) => ({
+export const generateGameWithScore = (
+    teamNames: string[]
+): Omit<team.IGame, 'id' | 'opponent_id'> => ({
     ...generateGame(teamNames),
     opponent_score: faker.number.int({ min: 60, max: 150 }),
     home_score: faker.number.int({ min: 60, max: 150 }),

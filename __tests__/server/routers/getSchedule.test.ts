@@ -12,15 +12,23 @@ const mockTeams = Array.from({ length: 5 }, generateTeam)
 const mockTeamNames = mockTeams.map(team => team.name)
 
 const mockSchedule = validateSchedule(
-    Array.from({ length: 80 }, () => ({
-        ...generateGameWithScore(mockTeamNames),
-        id: faker.string.uuid(),
-        opponent: {
-            ...faker.helpers.arrayElement(mockTeams),
-            id: faker.string.uuid(),
-        },
-    }))
-) as any
+    Array.from(
+        { length: 80 },
+        () =>
+            ({
+                ...generateGameWithScore(mockTeamNames),
+                id: faker.string.uuid(),
+                opponent: {
+                    ...faker.helpers.arrayElement(mockTeams),
+                    id: faker.string.uuid(),
+                },
+                // eslint-disable-next-line
+    } as any))
+).map(game => ({
+    ...game,
+    id: faker.string.uuid(),
+    opponent_id: faker.string.uuid(),
+}))
 
 describe('api/getSchedule', () => {
     it('should return the schedule', async () => {
@@ -35,7 +43,6 @@ describe('api/getSchedule', () => {
             orderBy: {
                 date: 'asc',
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(schedule).toHaveLength(80)
@@ -54,7 +61,6 @@ describe('api/getSchedule', () => {
             orderBy: {
                 date: 'asc',
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(schedule).toHaveLength(5)
@@ -80,7 +86,6 @@ describe('api/getSchedule', () => {
             include: {
                 opponent: true,
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(schedule).toHaveLength(5)
@@ -110,7 +115,6 @@ describe('api/getSchedule', () => {
             include: {
                 opponent: true,
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(schedule).toHaveLength(5)

@@ -6,11 +6,10 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'a.espncdn.com',
                 port: '',
-                pathname: '/i/**'
-            }
-        ]
-    }
+                pathname: '/i/**',
+            },
+        ],
+    },
 }
-
 
 module.exports = nextConfig

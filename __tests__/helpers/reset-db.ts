@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-export default async () => {
+const reset = async (): Promise<void> => {
     await prisma.$transaction([
         prisma.seasonAverages.deleteMany(),
         prisma.playerGame.deleteMany(),
@@ -11,3 +11,5 @@ export default async () => {
         prisma.team.deleteMany(),
     ])
 }
+
+export default reset

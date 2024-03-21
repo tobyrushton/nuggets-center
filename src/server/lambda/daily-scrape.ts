@@ -2,7 +2,7 @@ import type { Handler, APIGatewayProxyResultV2 } from 'aws-lambda'
 import { updateGameStats } from '../functions/update-game-stats'
 import { updatePlayers } from '../functions/update-player'
 import { updateSeasonAverages } from '../functions/update-season-averages'
-import { updateSchedule } from '../functions/update-schedule'
+import { updateGameScores } from '../functions/update-game-scores'
 
 export const handler: Handler = async (): Promise<APIGatewayProxyResultV2> => {
     try {
@@ -10,7 +10,7 @@ export const handler: Handler = async (): Promise<APIGatewayProxyResultV2> => {
             updateGameStats(),
             updatePlayers(),
             updateSeasonAverages(),
-            updateSchedule(),
+            updateGameScores(),
         ])
         return {
             statusCode: 200,

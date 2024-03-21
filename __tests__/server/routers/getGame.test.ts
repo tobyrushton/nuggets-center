@@ -24,6 +24,7 @@ describe('api/getGame', () => {
             opponent_score: mockGame.opponent_score,
             home_score: mockGame.home_score,
             home: true,
+            // eslint-disable-next-line
         } as any)
 
         const game = await serverClient.getGame({ id: '1' })
@@ -40,7 +41,6 @@ describe('api/getGame', () => {
                 home_score: true,
                 home: true,
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
         expect(game).toEqual({
             game: {

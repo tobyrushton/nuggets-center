@@ -31,7 +31,7 @@ functions:
     handler: ./src/server/lambda/daily-scrape.handler
     events:
       - schedule:
-          rate: rate(1 day) # triggers everyday
+          rate: cron(0 6 * * ? *) # every day at 6am UTC
           enabled: true
   weekly-scrape:
     handler: ./src/server/lambda/weekly-scrape.handler

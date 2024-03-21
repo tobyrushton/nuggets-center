@@ -1,6 +1,9 @@
 import { faker } from '@faker-js/faker'
 
-export const generateGameStats = () => ({
+export const generateGameStats = (): Omit<
+    player.IGameStats,
+    'id' | 'player_id' | 'game_id'
+> & { date: string } => ({
     pts: faker.number.int({ min: 0, max: 50 }),
     ast: faker.number.int({ min: 0, max: 20 }),
     reb: faker.number.int({ min: 0, max: 30 }),

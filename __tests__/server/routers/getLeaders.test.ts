@@ -36,7 +36,6 @@ describe('api/getLeaders', () => {
             include: {
                 player: true,
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(result.leaders).toHaveLength(5)
@@ -59,7 +58,6 @@ describe('api/getLeaders', () => {
             include: {
                 player: true,
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         expect(result.leaders).toHaveLength(1)

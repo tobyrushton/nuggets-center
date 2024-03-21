@@ -47,9 +47,6 @@ export const getSeasonAverage = publicProcedure
                 where: {
                     player_id: input.id,
                 },
-                cacheStrategy: {
-                    ttl: 60 * 60,
-                },
             }
         )
 

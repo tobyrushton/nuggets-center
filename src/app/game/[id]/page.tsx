@@ -108,7 +108,9 @@ const GamePage: FC<GamePageProps> = async ({ params: { id } }) => {
                     </TableCaption>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Player</TableHead>
+                            <TableHead className="sticky left-0 bg-white dark:bg-black">
+                                Player
+                            </TableHead>
                             <TableHead>MIN</TableHead>
                             <TableHead>FG</TableHead>
                             <TableHead>3PT</TableHead>

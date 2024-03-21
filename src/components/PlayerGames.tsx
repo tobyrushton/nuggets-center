@@ -80,7 +80,9 @@ const PlayerGamesSkeleton: FC = () => {
     )
 }
 
-const PlayerGamesBody: FC<PlayerGameProps> = async ({ id }) => {
+const PlayerGamesBody: FC<Omit<PlayerGameProps, 'loading'>> = async ({
+    id,
+}) => {
     const { stats } = await serverClient.getGameStats({ player_id: id })
 
     return (
