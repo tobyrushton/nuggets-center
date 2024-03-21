@@ -2,8 +2,6 @@ import { ImageResponse } from 'next/og'
 import { serverClient } from '@/app/_trpc/serverClient'
 import { GamePageProps } from './page'
 
-export const runtime = 'edge'
-
 export const alt = 'Game Image'
 
 export const size = {

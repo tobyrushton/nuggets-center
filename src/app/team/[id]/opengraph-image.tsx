@@ -2,8 +2,6 @@ import { ImageResponse } from 'next/og'
 import { serverClient } from '@/app/_trpc/serverClient'
 import { TeamPageProps } from './page'
 
-export const runtime = 'edge'
-
 export const alt = 'Team Logo'
 export const size = {
     width: 256,
