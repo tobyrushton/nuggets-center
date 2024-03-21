@@ -28,7 +28,6 @@ describe('api/getSeasonAverage', () => {
             where: {
                 player_id: id,
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
 
         const { player_name: _, ...rest } = mockSeasonAverage

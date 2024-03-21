@@ -67,9 +67,6 @@ export const getSchedule = publicProcedure
                     : input.opponentId
                       ? { opponent_id: input.opponentId }
                       : undefined,
-            cacheStrategy: {
-                ttl: 60 * 60,
-            },
         })
 
         return {

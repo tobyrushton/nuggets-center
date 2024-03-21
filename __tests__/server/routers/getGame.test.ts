@@ -41,7 +41,6 @@ describe('api/getGame', () => {
                 home_score: true,
                 home: true,
             },
-            cacheStrategy: { ttl: 60 * 60 },
         })
         expect(game).toEqual({
             game: {
