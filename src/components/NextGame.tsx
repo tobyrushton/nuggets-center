@@ -47,46 +47,52 @@ export const NextGame: FC = async () => {
         <Card className="h-min">
             <CardHeader>
                 <CardTitle>
-                    <NextGameTime
-                        nextGameTime={nextGame[0].date.toISOString()}
-                    />
+                    {nextGame.length > 0 ? (
+                        <NextGameTime
+                            nextGameTime={nextGame[0].date.toISOString()}
+                        />
+                    ) : (
+                        'No upcoming games'
+                    )}
                 </CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-row">
-                <div className="flex grow justify-center">
-                    <Link
-                        className="flex flex-col gap-5"
-                        href={`/team/${team.id}`}
-                    >
-                        <Image
-                            src={team.logo_url}
-                            alt={`${team.name} logo`}
-                            width={100}
-                            height={100}
-                            className="self-center"
-                        />
-                        {team.name}
-                    </Link>
-                </div>
-                <p className="flex flex-wrap content-center">
-                    {nextGame[0].home ? 'vs' : '@'}
-                </p>
-                <div className="flex grow justify-center">
-                    <Link
-                        className="flex flex-col gap-5"
-                        href={`/team/${nextGame[0].opponent.id}`}
-                    >
-                        <Image
-                            src={nextGame[0].opponent.logo_url}
-                            alt={`${nextGame[0].opponent.name} logo`}
-                            width={100}
-                            height={100}
-                            className="self-center"
-                        />
-                        {nextGame[0].opponent.name}
-                    </Link>
-                </div>
-            </CardContent>
+            {nextGame.length > 0 && (
+                <CardContent className="flex flex-row">
+                    <div className="flex grow justify-center">
+                        <Link
+                            className="flex flex-col gap-5"
+                            href={`/team/${team.id}`}
+                        >
+                            <Image
+                                src={team.logo_url}
+                                alt={`${team.name} logo`}
+                                width={100}
+                                height={100}
+                                className="self-center"
+                            />
+                            {team.name}
+                        </Link>
+                    </div>
+                    <p className="flex flex-wrap content-center">
+                        {nextGame[0].home ? 'vs' : '@'}
+                    </p>
+                    <div className="flex grow justify-center">
+                        <Link
+                            className="flex flex-col gap-5"
+                            href={`/team/${nextGame[0].opponent.id}`}
+                        >
+                            <Image
+                                src={nextGame[0].opponent.logo_url}
+                                alt={`${nextGame[0].opponent.name} logo`}
+                                width={100}
+                                height={100}
+                                className="self-center"
+                            />
+                            {nextGame[0].opponent.name}
+                        </Link>
+                    </div>
+                </CardContent>
+            )}
         </Card>
     )
 }
