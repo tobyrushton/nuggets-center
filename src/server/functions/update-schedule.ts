@@ -65,7 +65,7 @@ export const updateSchedule = async (): Promise<void> => {
                         home: game.home,
                         home_score: game.home_score,
                         opponent_score: game.opponent_score,
-                        type: game.gameType,
+                        type: game.type,
                     },
                 })
             })
