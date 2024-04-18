@@ -10,9 +10,11 @@ interface IGameScoreScrape {
     opponent_score: number
 }
 
-export const scrapeGameScores = async (): Promise<IGameScoreScrape[]> => {
+export const scrapeGameScores = async (
+    playoffs: boolean
+): Promise<IGameScoreScrape[]> => {
     const res = await fetch(
-        `https://www.espn.co.uk/nba/team/schedule/_/name/den/season/${getCurrentSeason()}`
+        `https://www.espn.co.uk/nba/team/schedule/_/name/den/season/${getCurrentSeason()}/seasontype/${playoffs ? 3 : 2}`
     )
     const dom = new JSDOM(await res.text())
     const rows = dom.window.document.querySelectorAll('.Table__TR')

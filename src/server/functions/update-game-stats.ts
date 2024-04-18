@@ -41,8 +41,7 @@ export const updateGameStats = async (): Promise<void> => {
                     playerName
             )
 
-            if (!player)
-                throw new Error(`Player ${playerName} not found in database`)
+            if (!player) return
 
             const gameStatsInDb = await prisma.playerGame.findMany({
                 where: {
@@ -50,22 +49,27 @@ export const updateGameStats = async (): Promise<void> => {
                 },
             })
 
-            const gamesWithIds = gameStats.map(gameStat => {
-                const dateISO = getDateOfGame(gameStat.date).toISOString()
-                const game = games.find(gme => sameDay(gme.date, dateISO))
+            const gamesWithIds = gameStats
+                .map(gameStat => {
+                    const dateISO = getDateOfGame(gameStat.date).toISOString()
+                    const game = games.find(gme => sameDay(gme.date, dateISO))
 
-                if (!game)
-                    throw new Error(
-                        `Game not found for date ${dateISO} ${player.first_name} ${player.last_name}`
-                    )
-                const { date: _, ...rest } = gameStat
+                    const { date: _, ...rest } = gameStat
 
-                return {
-                    ...rest,
-                    game_id: game.id,
-                    player_id: player.id,
-                }
-            })
+                    if (!game)
+                        return {
+                            ...rest,
+                            game_id: '',
+                            player_id: player.id,
+                        }
+
+                    return {
+                        ...rest,
+                        game_id: game.id,
+                        player_id: player.id,
+                    }
+                })
+                .filter(gameStat => gameStat.game_id !== '')
 
             const filteredGameStats = gamesWithIds.filter(
                 gameStat =>

@@ -15,6 +15,7 @@ export interface IScheduleScrape {
     opponent_name: string
     opponent_score: number
     home_score: number
+    gameType: 'REGULAR' | 'PLAYOFF'
 }
 
 const convertTime12to24 = (time12h: string): string => {
@@ -44,9 +45,19 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
         `https://www.basketball-reference.com/teams/DEN/${getCurrentSeason()}_games.html`
     )
     const dom = new JSDOM(await res.text())
-    const rows = dom.window.document.getElementsByTagName('tr')
+    const regTable = dom.window.document.getElementById('games')
+    const playoffTable = dom.window.document.getElementById('games_playoffs')
+    const rows = Array.from(
+        (regTable as HTMLElement).getElementsByTagName('tr')
+    )
+
+    if (playoffTable) {
+        const playoffRows = playoffTable.getElementsByTagName('tr')
+        rows.push(...Array.from(playoffRows))
+    }
 
     const schedule: IScheduleScrape[] = []
+    let gameCount = 0
 
     for (let i = 0; i < rows.length; i++) {
         const content = rows[i].children
@@ -58,6 +69,7 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
                 content[0].textContent === 'G'
             )
         ) {
+            gameCount++
             // data that is the same for bothy completed and uncompleted games
             const dateString = content[1].children[0].textContent as string
             const rawTimeString = content[2].textContent as string
@@ -87,6 +99,7 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
                 opponent_name: opponentName,
                 opponent_score: home ? opponentScore : teamScore,
                 home_score: home ? teamScore : opponentScore,
+                gameType: gameCount > 82 ? 'PLAYOFF' : 'REGULAR',
             })
         }
     }
