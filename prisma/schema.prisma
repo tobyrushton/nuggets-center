@@ -1,13 +1,13 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
-  binaryTargets = ["native","rhel-openssl-1.0.x"]
+  binaryTargets   = ["native", "rhel-openssl-1.0.x"]
 }
 
 model Player {
@@ -91,4 +91,11 @@ model Game {
   opponent_score Int
   home_score     Int
   PlayerGame     PlayerGame[]
+  type           GameType     @default(REGULAR)
+}
+
+enum GameType {
+  REGULAR
+  PLAYOFF
+  PRESEASON
 }
