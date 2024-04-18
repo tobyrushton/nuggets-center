@@ -42,6 +42,7 @@ describe('api/getRecord', () => {
                 opponent_score: {
                     not: -1,
                 },
+                type: 'REGULAR',
             },
         })
 
@@ -61,6 +62,7 @@ describe('api/getRecord', () => {
                 opponent_score: {
                     not: -1,
                 },
+                type: 'REGULAR',
             },
         })
 
@@ -101,6 +103,7 @@ describe('api/getRecord', () => {
                 opponent_score: {
                     not: -1,
                 },
+                type: 'REGULAR',
             },
         })
         expect(record).toEqual({ wins: 2, losses: 1 })

@@ -26,6 +26,7 @@ export const getRecord = publicProcedure
                 opponent_score: {
                     not: -1,
                 },
+                type: 'REGULAR',
             },
         })
 

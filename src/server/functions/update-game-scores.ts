@@ -3,10 +3,13 @@ import prisma from '../db/client'
 import { scrapeGameScores } from '../scrapes/scrape-game-scores'
 
 export const updateGameScores = async (): Promise<void> => {
-    const [scheduleInDb, gameScores] = await Promise.all([
+    const [scheduleInDb, gameScoresReg, gameScoresPlayoff] = await Promise.all([
         prisma.game.findMany(),
-        scrapeGameScores(),
+        scrapeGameScores(false),
+        scrapeGameScores(true),
     ])
+
+    const gameScores = [...gameScoresReg, ...gameScoresPlayoff]
 
     const gamesToUpdate = scheduleInDb.filter(game => {
         const matchingGameScore = gameScores.find(gameScore =>
