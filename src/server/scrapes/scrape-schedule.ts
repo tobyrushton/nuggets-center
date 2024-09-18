@@ -16,6 +16,7 @@ export interface IScheduleScrape {
     opponent_score: number
     home_score: number
     type: 'REGULAR' | 'PLAYOFF'
+    season: number
 }
 
 const convertTime12to24 = (time12h: string): string => {
@@ -100,6 +101,7 @@ export const scrapeSchedule = async (): Promise<IScheduleScrape[]> => {
                 opponent_score: home ? opponentScore : teamScore,
                 home_score: home ? teamScore : opponentScore,
                 type: gameCount > 82 ? 'PLAYOFF' : 'REGULAR',
+                season: getCurrentSeason(),
             })
         }
     }

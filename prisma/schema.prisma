@@ -92,6 +92,7 @@ model Game {
   home_score     Int
   PlayerGame     PlayerGame[]
   type           GameType     @default(REGULAR)
+  season         Int
 }
 
 enum GameType {

@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { publicProcedure } from '../trpc'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 
 /**
  * Retrieves the schedule of games.
@@ -56,17 +57,19 @@ export const getSchedule = publicProcedure
                           date: input.method === 'next' ? 'asc' : 'desc',
                       }
                     : { date: 'asc' },
-            where:
-                input.method && input.method !== 'all'
-                    ? {
-                          home_score:
-                              input.method === 'next' ? -1 : { not: -1 },
-                          opponent_score:
-                              input.method === 'next' ? -1 : { not: -1 },
-                      }
-                    : input.opponentId
-                      ? { opponent_id: input.opponentId }
-                      : undefined,
+            where: {
+                    ...input.method && input.method !== 'all'
+                        ? {
+                            home_score:
+                                input.method === 'next' ? -1 : { not: -1 },
+                            opponent_score:
+                                input.method === 'next' ? -1 : { not: -1 },
+                        }
+                        : input.opponentId
+                        ? { opponent_id: input.opponentId }
+                        : undefined,
+                    season: getCurrentSeason(),
+            }
         })
 
         return {
