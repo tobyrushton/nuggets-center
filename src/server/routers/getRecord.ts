@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { publicProcedure } from '../trpc'
 import { getCurrentSeason } from '@/lib/getCurrentSeason'
+import { publicProcedure } from '../trpc'
 
 interface IRecord {
     wins: number

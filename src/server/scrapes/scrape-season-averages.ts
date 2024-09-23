@@ -37,15 +37,18 @@ export const scrapeSeasonAverages = async (): Promise<
     ISeasonAveragesScrape[]
 > => {
     const year = getCurrentSeason()
-    const res = await fetch(`https://www.espn.co.uk/nba/team/stats/_/name/den/season/${year}/seasontype/2`)
+    const res = await fetch(
+        `https://www.espn.co.uk/nba/team/stats/_/name/den/season/${year}/seasontype/2`
+    )
     const dom = new JSDOM(await res.text())
 
     // if season has not started the page will not exist and will be routed to the last season
     // so we need to check that the page is correct
-    const title = dom.window.document.querySelector('title')?.textContent
-    const pageYear = title?.split('-')[1]
-    if (pageYear !== (year - 2000).toString()) {
-        console.log(pageYear, year)
+    if (
+        !dom.window.document.querySelector(
+            `option[data-param-value="${year}|2"]`
+        )
+    ) {
         console.log('Season has not started yet')
         return []
     }

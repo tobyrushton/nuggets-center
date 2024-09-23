@@ -1,12 +1,14 @@
 import { faker } from '@faker-js/faker'
 import { IScheduleScrape } from '@/server/scrapes/scrape-schedule'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 
 export const generateGame = (
     teamNames: string[]
-): { date: string; home: boolean; opponent_name: string } => ({
+): { date: string; home: boolean; opponent_name: string; season: number } => ({
     date: `${faker.number.int({ min: 1, max: 12 })}/${faker.number.int({ min: 1, max: 28 })}`,
     home: faker.datatype.boolean(),
     opponent_name: faker.helpers.arrayElement(teamNames),
+    season: getCurrentSeason(),
 })
 
 export const generateGameWithScore = (

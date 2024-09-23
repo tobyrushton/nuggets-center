@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { serverClient } from '@/app/_trpc/serverClient'
 import { faker } from '@faker-js/faker'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import { prismaMock } from '../../singleton'
 import {
     generateGameWithScore,
@@ -43,6 +44,9 @@ describe('api/getSchedule', () => {
             orderBy: {
                 date: 'asc',
             },
+            where: {
+                season: getCurrentSeason(),
+            },
         })
 
         expect(schedule).toHaveLength(80)
@@ -60,6 +64,9 @@ describe('api/getSchedule', () => {
             },
             orderBy: {
                 date: 'asc',
+            },
+            where: {
+                season: getCurrentSeason(),
             },
         })
 
@@ -82,6 +89,7 @@ describe('api/getSchedule', () => {
             where: {
                 home_score: -1,
                 opponent_score: -1,
+                season: getCurrentSeason(),
             },
             include: {
                 opponent: true,
@@ -111,6 +119,7 @@ describe('api/getSchedule', () => {
                 opponent_score: {
                     not: -1,
                 },
+                season: getCurrentSeason(),
             },
             include: {
                 opponent: true,

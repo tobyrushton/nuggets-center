@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { serverClient } from '@/app/_trpc/serverClient'
 import { faker } from '@faker-js/faker'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import { prismaMock } from '../../singleton'
 import {
     generateGameWithScore,
@@ -19,6 +20,7 @@ describe('api/getRecord', () => {
                 id: faker.string.uuid(),
                 opponent_id: faker.string.uuid(),
                 opponent_name: faker.helpers.arrayElement(mockTeamNames),
+                type: 'REGULAR',
             }))
             // eslint-disable-next-line
         ) as any[]
@@ -43,6 +45,7 @@ describe('api/getRecord', () => {
                     not: -1,
                 },
                 type: 'REGULAR',
+                season: getCurrentSeason(),
             },
         })
 
@@ -63,6 +66,7 @@ describe('api/getRecord', () => {
                     not: -1,
                 },
                 type: 'REGULAR',
+                season: getCurrentSeason(),
             },
         })
 
@@ -104,6 +108,7 @@ describe('api/getRecord', () => {
                     not: -1,
                 },
                 type: 'REGULAR',
+                season: getCurrentSeason(),
             },
         })
         expect(record).toEqual({ wins: 2, losses: 1 })
