@@ -140,6 +140,9 @@ export const LastFiveGames: FC = async () => {
                         </li>
                     ))}
                 </ul>
+                {lastFiveGames.length === 0 && (
+                    <p className="text-center">No games played yet</p>
+                )}
             </CardContent>
         </Card>
     )

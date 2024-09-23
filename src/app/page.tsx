@@ -19,7 +19,7 @@ export const fetchCache = 'force-no-store'
 const Home = (): ReactNode => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2">
-            <div className="flex flex-col w-full p-2 gap-5 justify-between">
+            <div className="flex flex-col w-full p-2 gap-5">
                 <Suspense fallback={<NextGameSkeleton />}>
                     <NextGame />
                 </Suspense>
