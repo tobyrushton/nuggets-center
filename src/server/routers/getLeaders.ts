@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { publicProcedure } from '../trpc'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 
 const leaderTypes = [
     'pts',
@@ -63,10 +64,13 @@ export const getLeaders = publicProcedure
             include: {
                 player: true,
             },
+            where: {
+                season: getCurrentSeason(),
+            }
         })
 
         return {
-            leaders: leaders.map(leader => ({
+            leaders: leaders.length > 0 ? leaders.map(leader => ({
                 player_id: leader.player.id,
                 player_name: `${leader.player.first_name} ${leader.player.last_name}`,
                 profile_url: leader.player.profile_url,
@@ -74,6 +78,11 @@ export const getLeaders = publicProcedure
                     input.category === 'min'
                         ? parseFloat(leader[input.category])
                         : leader[input.category],
+            })): (await ctx.prisma.player.findMany({ take: input.take })).map(player => ({
+                player_id: player.id,
+                player_name: `${player.first_name} ${player.last_name}`,
+                profile_url: player.profile_url,
+                value: -1,
             })),
         }
     })

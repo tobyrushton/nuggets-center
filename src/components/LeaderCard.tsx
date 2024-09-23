@@ -86,7 +86,7 @@ const LeaderItem: FC<LeaderItemProps> = ({ player, first }) => {
                 'w-full': first,
             })}
         >
-            <p className="font-bold">{player.value}</p>
+            <p className="font-bold">{player.value >= 0 ? player.value : 'N/A'}</p>
             <p className="text-nowrap">
                 {first ? player.player_name : shortenName(player.player_name)}
             </p>

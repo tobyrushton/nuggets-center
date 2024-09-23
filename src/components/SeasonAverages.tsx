@@ -6,7 +6,7 @@ import { Skeleton } from './ui/skeleton'
 
 interface SeasonAverageProps {
     title: string
-    value: number
+    value: number | string
 }
 
 interface SeasonAveragesProps {
@@ -56,12 +56,12 @@ export const SeasonAverages: FC<SeasonAveragesProps> = async ({ id }) => {
     return (
         <CardContent>
             <ul className="flex justify-between px-2 sm:px-5 md:px-10">
-                <SeasonAverageItem title="PTS" value={seasonAverage.pts} />
-                <SeasonAverageItem title="AST" value={seasonAverage.ast} />
-                <SeasonAverageItem title="REB" value={seasonAverage.reb} />
-                <SeasonAverageItem title="STL" value={seasonAverage.stl} />
-                <SeasonAverageItem title="BLK" value={seasonAverage.blk} />
-                <SeasonAverageItem title="FG%" value={seasonAverage.fg_pct} />
+                <SeasonAverageItem title="PTS" value={seasonAverage?.pts ?? 'N/A'} />
+                <SeasonAverageItem title="AST" value={seasonAverage?.ast ?? 'N/A'} />
+                <SeasonAverageItem title="REB" value={seasonAverage?.reb ?? 'N/A'} />
+                <SeasonAverageItem title="STL" value={seasonAverage?.stl ?? 'N/A'} />
+                <SeasonAverageItem title="BLK" value={seasonAverage?.blk ?? 'N/A'} />
+                <SeasonAverageItem title="FG%" value={seasonAverage?.fg_pct ?? 'N/A'} />
             </ul>
         </CardContent>
     )

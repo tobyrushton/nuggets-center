@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { publicProcedure } from '../trpc'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 
 /**
  * Retrieves the season average statistics for a player.
@@ -38,14 +39,15 @@ export const getSeasonAverage = publicProcedure
                 pf: z.number(),
                 pts: z.number(),
                 games_played: z.number(),
-            }),
+            }).nullable(),
         })
     )
     .query(async ({ ctx, input }) => {
-        const seasonAverage = await ctx.prisma.seasonAverages.findUniqueOrThrow(
+        const seasonAverage = await ctx.prisma.seasonAverages.findUnique(
             {
                 where: {
                     player_id: input.id,
+                    season: getCurrentSeason(),
                 },
             }
         )

@@ -52,7 +52,7 @@ const Leader: FC<LeaderProps> = async ({ leader }) => {
                 />
                 <span>
                     <p>{player.player_name}</p>
-                    <p>{player.value}</p>
+                    <p>{player.value >= 0 ? player.value: 'N/A'}</p>
                 </span>
             </Link>
             <Separator />
