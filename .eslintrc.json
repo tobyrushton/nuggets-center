@@ -31,6 +31,13 @@
               "allowExpressions": true
           }
       ],
+      "import/no-unresolved": [
+        "error", {
+            "ignore": [
+                "geist"
+            ]
+        }
+      ],
       "no-plusplus": "off",
       "no-nested-ternary": "off",
       "react/require-default-props": "off",
@@ -87,7 +94,10 @@
   },
   "settings": {
       "import/resolver": {
-          "typescript": {}
+          "typescript": {
+            "alwaysTryTypes": true,
+            "paths": "./tsconfig.json"
+          }
       }
     },
     "globals" : {

@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { serverClient } from '@/app/_trpc/serverClient'
 import { faker } from '@faker-js/faker'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import { prismaMock } from '../../singleton'
 import { generateSeasonAverage } from '../../helpers/generators'
-import { getCurrentSeason } from '@/lib/getCurrentSeason'
 
 const mockSeasonAverage = {
     ...generateSeasonAverage(),
@@ -23,12 +23,10 @@ describe('api/getSeasonAverage', () => {
 
         const { seasonAverage } = await serverClient.getSeasonAverage({ id })
 
-        expect(
-            prismaMock.seasonAverages.findUnique
-        ).toHaveBeenCalledWith({
+        expect(prismaMock.seasonAverages.findUnique).toHaveBeenCalledWith({
             where: {
                 player_id: id,
-                season: getCurrentSeason(), 
+                season: getCurrentSeason(),
             },
         })
 
