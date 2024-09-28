@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import { publicProcedure } from '../trpc'
 
 interface IRecord {
@@ -27,6 +28,7 @@ export const getRecord = publicProcedure
                     not: -1,
                 },
                 type: 'REGULAR',
+                season: getCurrentSeason(),
             },
         })
 

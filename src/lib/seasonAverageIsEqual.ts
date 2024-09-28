@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ISeasonAverageNoId extends Omit<player.ISeasonAverage, 'player_id'> {}
 
 /**

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { serverClient } from '@/app/_trpc/serverClient'
 import { faker } from '@faker-js/faker'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import { prismaMock } from '../../singleton'
 import { generateSeasonAverage, generatePlayer } from '../../helpers/generators'
 
@@ -36,6 +37,9 @@ describe('api/getLeaders', () => {
             include: {
                 player: true,
             },
+            where: {
+                season: getCurrentSeason(),
+            },
         })
 
         expect(result.leaders).toHaveLength(5)
@@ -57,6 +61,9 @@ describe('api/getLeaders', () => {
             take: 1,
             include: {
                 player: true,
+            },
+            where: {
+                season: getCurrentSeason(),
             },
         })
 

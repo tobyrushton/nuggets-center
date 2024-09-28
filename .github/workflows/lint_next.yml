@@ -16,7 +16,10 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node-version }}
-            - name: npm ci and lint
+            - uses: pnpm/action-setup@v3
+              with:
+                version: 9
+            - name: pnpm i and lint
               run: |
-                  npm ci
-                  npm run lint
+                  pnpm i
+                  pnpm run lint

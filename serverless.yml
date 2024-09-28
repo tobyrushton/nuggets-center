@@ -1,7 +1,6 @@
 service: nuggets-center
 
 plugins:
-  - serverless-esbuild # used for compiling/packaging the Typescript code
   - serverless-offline # used for local execution
   - serverless-ssm-fetch
 

@@ -10,21 +10,28 @@ import { scrapeSchedule } from '../scrapes/scrape-schedule'
 export const updateSchedule = async (): Promise<void> => {
     const [schedule, scheduleInDb, teamsInDb] = await Promise.all([
         scrapeSchedule(),
-        prisma.game.findMany(),
+        prisma.game.findMany({ include: { opponent: true } }),
         prisma.team.findMany(),
     ])
 
     const newGamesNotInDb = schedule.filter(
-        game =>
-            !scheduleInDb.some(gameInDb => sameDay(game.date, gameInDb.date))
+        game => !scheduleInDb.some(gameInDb => game.date === gameInDb.date)
     )
 
     const gamesToUpdate = schedule.filter(game =>
         scheduleInDb.some(
             gameInDb =>
                 sameDay(gameInDb.date, game.date) &&
-                !scheduleGameIsEqual(game, gameInDb)
+                !scheduleGameIsEqual(game, gameInDb) &&
+                game.opponent_name === gameInDb.opponent.name
         )
+    )
+
+    console.log(
+        schedule.length,
+        newGamesNotInDb.length,
+        gamesToUpdate.length,
+        scheduleInDb.length
     )
 
     if (gamesToUpdate.length > 0)
@@ -66,6 +73,7 @@ export const updateSchedule = async (): Promise<void> => {
                         home_score: game.home_score,
                         opponent_score: game.opponent_score,
                         type: game.type,
+                        season: game.season,
                     },
                 })
             })

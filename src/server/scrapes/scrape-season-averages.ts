@@ -1,3 +1,4 @@
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import jsdom from 'jsdom'
 
 const { JSDOM } = jsdom
@@ -35,8 +36,22 @@ interface ISeasonAveragesScrape extends IGameStatsScrape, IShootingStatsScrape {
 export const scrapeSeasonAverages = async (): Promise<
     ISeasonAveragesScrape[]
 > => {
-    const res = await fetch('https://www.espn.co.uk/nba/team/stats/_/name/den')
+    const year = getCurrentSeason()
+    const res = await fetch(
+        `https://www.espn.co.uk/nba/team/stats/_/name/den/season/${year}/seasontype/2`
+    )
     const dom = new JSDOM(await res.text())
+
+    // if season has not started the page will not exist and will be routed to the last season
+    // so we need to check that the page is correct
+    if (
+        !dom.window.document.querySelector(
+            `option[data-param-value="${year}|2"]`
+        )
+    ) {
+        console.log('Season has not started yet')
+        return []
+    }
 
     const tables = dom.window.document.querySelectorAll('.Table')
 

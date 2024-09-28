@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import { publicProcedure } from '../trpc'
 
 /**
@@ -56,8 +57,8 @@ export const getSchedule = publicProcedure
                           date: input.method === 'next' ? 'asc' : 'desc',
                       }
                     : { date: 'asc' },
-            where:
-                input.method && input.method !== 'all'
+            where: {
+                ...(input.method && input.method !== 'all'
                     ? {
                           home_score:
                               input.method === 'next' ? -1 : { not: -1 },
@@ -66,7 +67,9 @@ export const getSchedule = publicProcedure
                       }
                     : input.opponentId
                       ? { opponent_id: input.opponentId }
-                      : undefined,
+                      : undefined),
+                season: getCurrentSeason(),
+            },
         })
 
         return {

@@ -15,5 +15,6 @@ namespace team {
         opponent_id: number
         opponent_score: number
         home_score: number
+        season: number
     }
 }

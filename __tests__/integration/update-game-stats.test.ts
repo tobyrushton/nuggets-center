@@ -4,6 +4,7 @@ import { updateSchedule } from '@/server/functions/update-schedule'
 import { updatePlayers } from '@/server/functions/update-player'
 import { updateTeams } from '@/server/functions/update-teams'
 import { round } from '@/lib/round'
+import { getCurrentSeason } from '@/lib/getCurrentSeason'
 import prisma from '../helpers/prisma'
 
 describe('updateGameStats', () => {
@@ -14,6 +15,13 @@ describe('updateGameStats', () => {
     })
 
     it('should add game stats when none are in db', async () => {
+        // if season hasn't started yet, this will be 0
+        // so skip test
+        if (
+            getCurrentSeason() > new Date().getFullYear() &&
+            new Date().getMonth() < 11
+        )
+            return
         await updateGameStats()
 
         const count = await prisma.playerGame.count()

@@ -29,6 +29,10 @@ export const scrapePlayers = async (): Promise<IPlayerScrape[]> => {
     const players: IPlayerScrape[] = []
 
     rosterTableBody?.forEach(row => {
+        // check for players that are listed but dont have a contract
+        const salary = row.querySelector('td:nth-child(8)')?.textContent
+        if (salary === '--') return
+
         const profileUrl = row.querySelector('img')?.getAttribute('alt')
         const name = row.querySelector('td:nth-child(2) a')?.textContent
         const position = row.querySelector('td:nth-child(3)')?.textContent

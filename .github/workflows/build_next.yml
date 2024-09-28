@@ -21,8 +21,11 @@ jobs:
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v4
               with:
-                  node-version: ${{ matrix.node-version }}
-            - name: npm ci and build
+                node-version: ${{ matrix.node-version }}
+            - uses: pnpm/action-setup@v3
+              with:
+                version: 9
+            - name: pnpm i and build
               run: |
-                  npm ci
-                  npm run build
+                  pnpm i
+                  pnpm run build
