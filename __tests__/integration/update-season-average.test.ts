@@ -15,8 +15,12 @@ describe('updateSeasonAverages', () => {
     it('should update season averages when none are in db', async () => {
         // if season hasn't started yet, this will be 0
         // so skip test
-        if (getCurrentSeason() > new Date().getFullYear() && new Date().getMonth() < 11) return
-        
+        if (
+            getCurrentSeason() > new Date().getFullYear() &&
+            new Date().getMonth() < 11
+        )
+            return
+
         const playerCount = await prisma.player.count()
         await updateSeasonAverages()
 

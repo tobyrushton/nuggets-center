@@ -17,7 +17,11 @@ describe('updateGameStats', () => {
     it('should add game stats when none are in db', async () => {
         // if season hasn't started yet, this will be 0
         // so skip test
-        if (getCurrentSeason() > new Date().getFullYear() && new Date().getMonth() < 11) return
+        if (
+            getCurrentSeason() > new Date().getFullYear() &&
+            new Date().getMonth() < 11
+        )
+            return
         await updateGameStats()
 
         const count = await prisma.playerGame.count()

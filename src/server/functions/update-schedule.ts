@@ -15,20 +15,24 @@ export const updateSchedule = async (): Promise<void> => {
     ])
 
     const newGamesNotInDb = schedule.filter(
-        game =>
-            !scheduleInDb.some(gameInDb => game.date === gameInDb.date)
+        game => !scheduleInDb.some(gameInDb => game.date === gameInDb.date)
     )
 
     const gamesToUpdate = schedule.filter(game =>
         scheduleInDb.some(
             gameInDb =>
                 sameDay(gameInDb.date, game.date) &&
-                !scheduleGameIsEqual(game, gameInDb)
-                && game.opponent_name === gameInDb.opponent.name
+                !scheduleGameIsEqual(game, gameInDb) &&
+                game.opponent_name === gameInDb.opponent.name
         )
     )
 
-    console.log(schedule.length, newGamesNotInDb.length, gamesToUpdate.length, scheduleInDb.length)
+    console.log(
+        schedule.length,
+        newGamesNotInDb.length,
+        gamesToUpdate.length,
+        scheduleInDb.length
+    )
 
     if (gamesToUpdate.length > 0)
         await Promise.all(

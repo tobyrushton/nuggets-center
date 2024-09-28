@@ -50,7 +50,7 @@ const RosterItemSkeleton: FC = () => {
 }
 
 const RosterItem: FC<RosterItemProps> = async ({ player }) => {
-    let average: player.ISeasonAverage | undefined
+    let average: player.ISeasonAverage | undefined | null
 
     try {
         average = (await serverClient.getSeasonAverage({ id: player.id }))
