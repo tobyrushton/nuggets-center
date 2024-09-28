@@ -1,13 +1,13 @@
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
   binaryTargets   = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Player {
@@ -18,15 +18,14 @@ model Player {
   weight          Int
   height_feet     Int
   height_inches   Int
-  season_averages SeasonAverages?
   profile_url     String
   games           PlayerGame[]
+  season_averages SeasonAverages?
 }
 
 model SeasonAverages {
   id           String @id @default(uuid())
   games_played Int
-  player       Player @relation(fields: [player_id], references: [id])
   player_id    String @unique
   season       Int
   min          String
@@ -48,13 +47,12 @@ model SeasonAverages {
   fg_pct       Float
   fg3_pct      Float
   ft_pct       Float
+  player       Player @relation(fields: [player_id], references: [id])
 }
 
 model PlayerGame {
   id        String @id @default(uuid())
-  player    Player @relation(fields: [player_id], references: [id])
   player_id String
-  game      Game   @relation(fields: [game_id], references: [id])
   game_id   String
   pts       Int
   ast       Int
@@ -73,6 +71,8 @@ model PlayerGame {
   fg_pct    Float
   fg3_pct   Float
   ft_pct    Float
+  game      Game   @relation(fields: [game_id], references: [id])
+  player    Player @relation(fields: [player_id], references: [id])
 }
 
 model Team {
@@ -86,13 +86,13 @@ model Game {
   id             String       @id @default(uuid())
   date           String       @unique
   home           Boolean
-  opponent       Team         @relation(fields: [opponent_id], references: [id])
   opponent_id    String
   opponent_score Int
   home_score     Int
-  PlayerGame     PlayerGame[]
   type           GameType     @default(REGULAR)
   season         Int
+  opponent       Team         @relation(fields: [opponent_id], references: [id])
+  PlayerGame     PlayerGame[]
 }
 
 enum GameType {
