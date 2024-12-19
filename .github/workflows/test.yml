@@ -20,7 +20,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - uses: ./.github/actions/build
-            - uses: KengoTODA/actions-setup-docker-compose@v1.2.2
+            - uses: KengoTODA/actions-setup-docker-compose@v1.2.3
               with:
                 version: '2.14.2'
             - name: Run tests
